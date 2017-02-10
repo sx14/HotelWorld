@@ -1,0 +1,23 @@
+.panel-heading,.sx-mid{
+    text-align: center !important;
+}
+
+.sx-right-float{
+    float: right;
+}
+
+.checkbox{
+    margin-right: 50px;
+}
+
+.sx-a{
+    padding:7px 0px 7px 0px;
+}
+
+.sx-cover-button{
+    width: 100% !important;
+}
+
+.sx-form-control{
+    padding: 6px 12px;
+}

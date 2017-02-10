@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring" />
+	<package name="default" extends="struts-default">
+		<action name="test" class="action.TestAction" method="execute">
+			<result name="success">test.jsp</result>
+		</action>
+		<action name="registerQuickly" class="action.UserAction" method="registerQuickly">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="login" class="action.UserAction" method="login">
+			<result name="USER" type="redirect">chooseHotel</result>
+			<result name="MANAGER" type="redirect">manageNewHotel</result>
+			<result name="STAFF" type="redirect">manageRoom</result>
+		</action>
+		
+		<action name="chooseHotel" class="action.HotelAction" method="chooseHotel">
+			<result name="success">choose_hotel.jsp</result>
+		</action>
+		
+		<action name="registerHotel" class="action.HotelAction" method="registerHotel">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="manageNewHotel" class="action.HotelAction" method="manageNewHotel">
+			<result name="success">manage_hotel_new.jsp</result>
+		</action>
+		
+		<action name="manageModifyHotel" class="action.HotelAction" method="manageModifyHotel">
+			<result name="success">manage_hotel_modify.jsp</result>
+		</action>
+		
+		<action name="hotelStatitic" class="action.HotelAction" method="hotelStatistic">
+			<result name="success">manage_hotel_statistic.jsp</result>
+		</action>
+		
+		<action name="approveNewHotel" class="action.HotelAction" method="approveNewHotel">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="personalHome" class="action.HotelAction" method="personalHome">
+			<result name="success">personal_home.jsp</result>
+		</action>
+	</package>
+</struts>

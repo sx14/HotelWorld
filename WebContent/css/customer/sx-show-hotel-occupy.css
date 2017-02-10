@@ -1,0 +1,13 @@
+.col-md-4{
+    text-align: center;
+}
+
+.form-inline{
+    padding-bottom: 20px;
+}
+
+.sx-vertical-line{
+    border-right-style: solid;
+    border-right-color: silver;
+    border-right-width: thin;
+}
