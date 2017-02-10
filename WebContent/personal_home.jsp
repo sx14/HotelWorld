@@ -1,6 +1,7 @@
 <%@page import="model.User"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Order" %>
+<%@page import="model.Hotel" %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://"
@@ -97,8 +98,9 @@
                             <tbody>
                             <%
                             	for(Order o : orders){
+                            		Hotel h = o.getHotel();
                             		out.println("<tr>");
-                            		out.println("<th>南京啦啦啦店</th>");
+                            		out.println("<th>"+h.getCity()+h.getHotel_name()+"</th>");
                             		out.println("<td>单人房</td>");
                             		out.println("<td>");
                             		out.println("<p><span class=\"label label-primary\">住</span>2016-09-23</p>");

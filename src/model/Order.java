@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Table(name="order_o",schema="hotel_world")
 public class Order {
 	private int oid;
-	private int rid;
 	private Date in_date;
 	private Date out_date;
 	private Date create_date;
@@ -28,7 +27,7 @@ public class Order {
 	private int star;
 	private String comment;
 	private Hotel hotel;
-	
+	private Room room;
 	
 	public int getPrice() {
 		return price;
@@ -87,11 +86,14 @@ public class Order {
 	public Date getIn_date() {
 		return in_date;
 	}
-	public int getRid() {
-		return rid;
+	
+	@ManyToOne(targetEntity=Room.class)
+	@JoinColumn(name="rid")
+	public Room getRoom() {
+		return room;
 	}
-	public void setRid(int rid) {
-		this.rid = rid;
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 	public void setIn_date(Date in_date) {
 		this.in_date = in_date;
@@ -125,11 +127,6 @@ public class Order {
 	public void setOid(int oid) {
 		this.oid = oid;
 	}
-//	public int getUid() {
-//		return uid;
-//	}
-//	public void setUid(int uid) {
-//		this.uid = uid;
-//	}
+
 	
 }
