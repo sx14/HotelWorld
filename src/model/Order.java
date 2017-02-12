@@ -1,5 +1,7 @@
 package model;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
@@ -11,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import constant.OrderState;
 
 @Entity
 @Table(name="order_o",schema="hotel_world")
@@ -25,10 +30,35 @@ public class Order {
 	private Set<Customer> customers;
 	private User user;
 	private int star;
-	private String comment;
+	private String comment_o;
 	private Hotel hotel;
 	private Room room;
+	private int state;
 	
+	@Transient
+	public String getStateString(){
+		String stateString = null;
+		switch(state){
+			case 0 : stateString = "等待入住";break;
+			case 1 : stateString = "已入住";break;
+			case 2 : stateString = "已退房";break;
+			case 3 : stateString = "已取消";break;
+			default : stateString = "未知";
+		}
+		return stateString;
+	}
+	
+	public Order(){
+		state = OrderState.RESERVE.getValue();
+		create_date = Calendar.getInstance().getTime();
+	}
+	
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
 	public int getPrice() {
 		return price;
 	}
@@ -69,11 +99,11 @@ public class Order {
 	public void setStar(int star) {
 		this.star = star;
 	}
-	public String getComment() {
-		return comment;
+	public String getComment_o() {
+		return comment_o;
 	}
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setComment_o(String comment_o) {
+		this.comment_o = comment_o;
 	}
 	@ManyToOne(targetEntity=User.class)
 	@JoinColumn(name="uid")
@@ -109,6 +139,18 @@ public class Order {
 	}
 	public void setIs_vip(int is_vip) {
 		this.is_vip = is_vip;
+	}
+	
+	@Transient
+	public String getInDateString(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(in_date);
+	}
+	
+	@Transient
+	public String getOutDateString(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(out_date);
 	}
 	
 	@OneToMany(fetch=FetchType.EAGER)

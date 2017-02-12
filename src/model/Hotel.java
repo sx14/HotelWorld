@@ -2,8 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,13 +18,14 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import constant.ApplyState;
+import constant.OrderState;
+import vo.RoomVO;
 
 @Entity
 @Table(name="hotel",schema="hotel_world")
 public class Hotel implements Serializable{
 	private static final long serialVersionUID = -5414687446666094220L;
 	private int hid;
-//	private int uid;
 	private String city;
 	private double start_money;
 	private Date register_date;
@@ -43,7 +43,33 @@ public class Hotel implements Serializable{
 	private String email;
 	private int state;
 	
+
+	@Transient
+	public int getConsumeSum(){
+		int sum = 0;
+		for(Order order : orders){
+			if (order.getState()== OrderState.OUT.getValue()) {
+				if (order.getIs_vip() == 1) {
+					sum += order.getVip_price();
+				}else{
+					sum += order.getPrice();
+				}
+			}
+		}
+		return sum;
+	}
 	
+	private List<RoomVO> roomVOs;
+	
+	@Transient
+	public List<RoomVO> getRoomVOs() {
+		return roomVOs;
+	}
+
+	public void setRoomVOs(List<RoomVO> roomVOs) {
+		this.roomVOs = roomVOs;
+	}
+
 	public int getState() {
 		return state;
 	}
@@ -79,18 +105,12 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getGoodCommentNum(){
 		int sum = 0;
-		for(Room room : rooms){
-//			sum += room.getGoodCommentNum();
-		}
 		return sum;
 	}
 	
 	@Transient
 	public int getCommentNum(){
 		int sum = 0;
-		for(Room room : rooms){
-//			sum += room.getCommentNum();
-		}
 		return sum;
 	}
 	
@@ -256,6 +276,28 @@ public class Hotel implements Serializable{
 			}
 		}
 		return capacity;
+	}
+	
+
+	public Hotel(Hotel hotel){
+		this.city = hotel.getCity();
+		this.description = hotel.getDescription();
+		this.email = hotel.getEmail();
+		this.hid = hotel.getHid();
+		this.hotel_name = hotel.getHotel_name();
+		this.id_num = hotel.getId_num();
+		this.image_big = hotel.getImage_big();
+		this.image_mid = hotel.getImage_mid();
+		this.image_small = hotel.getImage_small();
+		this.name = hotel.getName();
+		this.orders = hotel.getOrders();
+		this.register_date = hotel.getRegister_date();
+		this.rooms = hotel.getRooms();
+		this.roomVOs = hotel.getRoomVOs();
+		this.star = hotel.getStar();
+		this.start_money = hotel.getStart_money();
+		this.state = hotel.getState();
+		this.user = hotel.getUser();
 	}
 	
 }

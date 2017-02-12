@@ -1,11 +1,7 @@
 package service.impl;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
 import constant.ApplyState;
 import dao.HotelDAO;
 import dao.HotelDraftDAO;
@@ -57,14 +53,15 @@ public class HotelServiceImpl implements HotelService{
 	}
 
 	@Override
-	public boolean registerHotel(Hotel hotel,List<RoomVO> roomVOs) {
+	public boolean registerOrUpdateHotel(Hotel hotel) {
 		Set<Room> rooms = new HashSet<>();
-		for(RoomVO roomVO : roomVOs){
+		for(RoomVO roomVO : hotel.getRoomVOs()){
 			int num = roomVO.getNum();
 			int capacity = roomVO.getCapacity();
 			int type = roomVO.getType();
 			for(int i = 0 ; i < num ; i++){//根据注册时的房间数量，给每个房间建立一条记录
 				Room room = new Room();
+				room.setRid(i+1);
 				room.setCapacity(capacity);
 				room.setHotel(hotel);
 				room.setType(type);
@@ -89,6 +86,15 @@ public class HotelServiceImpl implements HotelService{
 	public boolean approveNewHotel(Hotel hotel) {
 		hotel.setState(ApplyState.PASS.getValue());
 		return hotelDAO.saveOrUpdate(hotel);
+	}
+
+	@Override
+	public Hotel getHotel(int uid) {
+		List<Hotel> hotels = hotelDAO.get(uid);
+		if (hotels != null && hotels.size() != 0) {
+			return hotels.get(0);
+		}
+		return null;
 	}
 	
 	

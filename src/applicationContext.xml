@@ -45,7 +45,7 @@
 		
     <!-- 依赖注入 -->
     
-    <!-- ===========================test=========================== -->
+    <!-- ===========================visa=========================== -->
     <bean id="testAction" class="action.TestAction" scope="prototype">
     	<property name="testService" ref="testService"></property>
     </bean>
@@ -65,6 +65,7 @@
     
     <bean id="userService" class="service.impl.UserServiceImpl" scope="prototype">
     	<property name="userDAO" ref="userDAOImpl"></property>
+    	<property name="visaDAO" ref="visaDAOImpl"></property>
     </bean>
     
 	<bean id="userDAOImpl" class="dao.impl.UserDAOImpl" scope="prototype">
@@ -74,6 +75,8 @@
     <!-- ============================hotel=========================== -->
     <bean id="hotelAction" class="action.HotelAction" scope="prototype">
     	<property name="hotelService" ref="hotelService"></property>
+    	<property name="orderService" ref="orderService"></property>
+    	<property name="userService" ref="userService"></property>
     </bean>
     
     <bean id="hotelService" class="service.impl.HotelServiceImpl" scope="prototype">
@@ -86,6 +89,16 @@
     </bean>
     
     <bean id="hotelDraftDAOImpl" class="dao.impl.HotelDraftDAOImpl" scope="prototype">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================order=========================== -->
+    
+    <bean id="orderService" class="service.impl.OrderServiceImpl" scope="prototype">
+    	<property name="orderDAO" ref="orderDAOImpl"></property>
+    </bean>
+    
+    <bean id="orderDAOImpl" class="dao.impl.OrderDAOImpl" scope="prototype">
     	<property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
     

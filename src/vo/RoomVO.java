@@ -5,11 +5,30 @@ import java.io.File;
 public class RoomVO {
 	private int num;
 	private int capacity;
-	private File file;
+	private String image;
 	private int type;
+	private int price;
+	private int vip_price;
 	
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
 	
-	
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public int getVip_price() {
+		return vip_price;
+	}
+	public void setVip_price(int vip_price) {
+		this.vip_price = vip_price;
+	}
 	public int getType() {
 		return type;
 	}
@@ -28,12 +47,7 @@ public class RoomVO {
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
-	public File getFile() {
-		return file;
-	}
-	public void setFile(File file) {
-		this.file = file;
-	}
+
 	
 	
 }

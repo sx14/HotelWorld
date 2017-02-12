@@ -85,9 +85,9 @@ body{
     margin-right: 50px !important;
 }
 
-label{
-    margin-right: 3px;
-}
+/*label{*/
+    /*margin-right: 3px;*/
+/*}*/
 
 /*select{*/
     /*width: 150px !important;*/
@@ -277,4 +277,10 @@ a:hover{
     border-right: solid 1px #ddd;
     border-bottom: solid 1px #ddd;
 }
+
+.sx-label{
+    padding-top: 10px;
+}
+
+
 

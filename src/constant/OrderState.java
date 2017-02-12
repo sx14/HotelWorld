@@ -1,9 +1,10 @@
 package constant;
 
-public enum ApplyState {
-	PASS(1),WAIT(0),UNPASS(-1),OPEN(2);
+public enum OrderState {
+	RESERVE(0),IN(1),OUT(2),CANCEL(-1);
+	
 	private int value;
-	private ApplyState(int value){
+	private OrderState(int value){
 		this.value = value;
 	}
 	

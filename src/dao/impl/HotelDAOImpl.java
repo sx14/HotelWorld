@@ -49,5 +49,16 @@ public class HotelDAOImpl implements HotelDAO{
 		session.close();
 		return hotels;
 	}
+	@Override
+	public List<Hotel> get(int uid) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "from Hotel where uid="+uid;
+		Query query = session.createQuery(hql);
+		List<Hotel> hotels = query.getResultList();
+		transaction.commit();
+		session.close();
+		return hotels;
+	}
 
 }

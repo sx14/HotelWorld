@@ -11,7 +11,7 @@ import model.User;
 public class UserDAOImpl implements UserDAO{
 	private SessionFactory sessionFactory;
 	@Override
-	public boolean add(User user) {
+	public boolean saveOrUpdate(User user) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
 		session.saveOrUpdate(user);

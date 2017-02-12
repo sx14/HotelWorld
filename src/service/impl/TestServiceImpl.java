@@ -7,7 +7,7 @@ public class TestServiceImpl implements TestService{
 	private VisaDAO visaDAO;
 	@Override
 	public String getName() {
-		return visaDAO.get("123456").getVid();
+		return null;
 	}
 	public VisaDAO getVisaDAO() {
 		return visaDAO;

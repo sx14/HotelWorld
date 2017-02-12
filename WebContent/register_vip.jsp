@@ -1,5 +1,17 @@
+<%@page import="model.User"%>
+<%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme() + "://"
+            + request.getServerName() + ":" + request.getServerPort()
+            + path + "/";
+    User user = (User)session.getAttribute("user");
+%>
+
+
 <!DOCTYPE html>
 <html lang="en">
+<base href="<%=basePath%>"></base>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,21 +24,16 @@
     <title>Theme Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
-    <link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/theme.css" rel="stylesheet">
-    <link href="../css/customer/sx-hotel-register.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
+    <link href="css/customer/sx-hotel-register.css" rel="stylesheet">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -76,47 +83,75 @@
             <h4><strong>会员注册</strong></h4>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal">
+            <form class="form-horizontal" action="registerVIP" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="col-md-4 control-label">用户名</label>
                     <div class="col-md-4">
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" value="<%=user.getUsername() %>" disabled>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">联系电话</label>
                     <div class="col-md-4">
-                        <input type="text" class="form-control" disabled>
+                        <input type="text" class="form-control" value="<%=user.getPhone() %>" disabled>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">姓名</label>
                     <div class="col-md-4">
-                        <input type="text" disabled ="disabled" class="form-control"placeholder="请输入姓名">
+                    	<%
+                    		if(user.getName() != null){
+                    			out.println("<input name=\"user.name\" type=\"text\" class=\"form-control\"placeholder=\"请输入姓名\" value=\""+user.getName()+"\">");
+                    		}else{
+                    			out.println("<input name=\"user.name\" type=\"text\" class=\"form-control\"placeholder=\"请输入姓名\">");
+                    		}
+                    	%>
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">身份证号</label>
                     <div class="col-md-4">
-                        <input type="number" class="form-control"placeholder="请输入身份证号">
+                    	<%
+                    		if(user.getId_num() != null){
+                    			out.println("<input name=\"user.id_num\" type=\"number\" class=\"form-control\"placeholder=\"请输入身份证号\" value=\""+user.getId_num()+"\">");
+                    		}else{
+                    			out.println("<input name=\"user.id_num\" type=\"number\" class=\"form-control\"placeholder=\"请输入身份证号\">");
+                    		}
+                    	%>
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">邮箱</label>
                     <div class="col-md-4">
-                        <input type="email" class="form-control"placeholder="如xxxx@xxx.xxx">
+                    	<%
+                    		if(user.getEmail() != null){
+                    			out.println("<input name=\"user.email\" type=\"email\" class=\"form-control\"placeholder=\"如xxxx@xxx.xxx\" value=\""+user.getEmail()+"\">");
+                    		}else{
+                    			out.println("<input name=\"user.email\" type=\"email\" class=\"form-control\"placeholder=\"如xxxx@xxx.xxx\">");
+                    		}
+                    	%>
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">银行卡号</label>
                     <div class="col-md-4">
-                        <input type="number" class="form-control"placeholder="绑定银行卡账号">
+                    	<%
+                    		if(user.getVisa() != null){
+                    			out.println("<input name=\"user.visa.num\" type=\"number\" class=\"form-control\"placeholder=\"绑定银行卡账号\" value=\""+user.getVisa().getVid()+"\">");
+                    		}else{
+                    			out.println("<input name=\"user.visa.num\" type=\"number\" class=\"form-control\"placeholder=\"绑定银行卡账号\">");
+                    		}
+                    	%>
+                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label">上传头像</label>
                     <div class="col-md-4">
-                        <input type="file" class="form-control">
+                        <input name="image" type="file" class="form-control">
                     </div>
                 </div>
                 <hr>
@@ -127,7 +162,6 @@
                         <a class="sx-right-float sx-a">注销会员</a>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>

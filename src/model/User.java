@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.sun.swing.internal.plaf.metal.resources.metal_zh_TW;
 
 import constant.UserRole;
 
@@ -33,8 +36,15 @@ public class User {
 //	private Hotel hotel;
 	private String image;
 	private int role;
+	private int money;
 	
 
+	public int getMoney() {
+		return money;
+	}
+	public void setMoney(int money) {
+		this.money = money;
+	}
 	public int getRole() {
 		return role;
 	}
@@ -119,7 +129,7 @@ public class User {
 	public void setLast_charge_date(Date last_charge_date) {
 		this.last_charge_date = last_charge_date;
 	}
-	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.LAZY)//立即加载
+	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)//立即加载
 	@JoinColumn(name="vid")
 	public Visa getVisa() {
 		return visa;
@@ -132,5 +142,38 @@ public class User {
 		this.role = UserRole.USER.getValue();
 	}
 	
+	@Transient
+	public String getHiddenName(){
+		if(name != null){
+			char[] hiddenName = new char[name.length()];
+			for(int i = 0 ; i < name.length(); i++){
+				if (i == 0) {
+					hiddenName[i] = name.charAt(i);
+				}else {
+					hiddenName[i] = '*';
+				}
+			}
+			return new String(hiddenName);
+		}else {
+			return null;
+		}
+	}
 	
+	@Transient
+	public String getHiddenPhone(){
+		char[] hiddenPhone = new char[phone.length()];
+		for(int i = 0 ; i < phone.length() ; i++){
+			if (i < 3 || i >= (phone.length()-4)) {
+				hiddenPhone[i] = phone.charAt(i);
+			}else{
+				hiddenPhone[i] = '*';
+			}
+		}
+		return new String(hiddenPhone);
+	}
+	
+	@Transient
+	public String getVIPNum(){
+		return String.format("%07d", uid);
+	}
 }

@@ -46,5 +46,18 @@
 		<action name="personalHome" class="action.HotelAction" method="personalHome">
 			<result name="success">personal_home.jsp</result>
 		</action>
+		
+		<action name="registerVIP" class="action.UserAction" method="registerVIP">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="modifyHotel" class="action.HotelAction" method="modifyHotel">
+			<result name="success">modify_hotel.jsp</result>
+		</action>
+		
+		<action name="updateHotel" class="action.HotelAction" method="updateHotel">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
 	</package>
 </struts>

@@ -7,13 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
 @Table(name="room",schema="hotel_world")
 public class Room {
 	private int rid;
-//	private int hid;
 	private int capacity;
 	private int price;
 	private int vip_price;
@@ -74,6 +74,28 @@ public class Room {
 	}
 	public void setVip_price(int vip_price) {
 		this.vip_price = vip_price;
+	}
+	
+	@Transient
+	public String getRoomType(){
+		String type = "人间";
+		switch (capacity) {
+		case 1:
+			type = "单"+type;
+			break;
+		case 2:
+			type = "双"+type;
+			break;
+		default:
+			type = capacity + type;
+			break;
+		}
+		return type;
+	}
+	
+	@Transient
+	public String getRoomName(){
+		return String.format("%04d", rid);
 	}
 	
 }

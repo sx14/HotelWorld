@@ -1,7 +1,7 @@
 package constant;
 
 public enum UserRole {
-	MANAGER(2),USER(0),STAFF(1),Owner(3);
+	MANAGER(2),USER(0),STAFF(1),OWNER(3);
 	private int value;
 	public int getValue(){
 		return value;
