@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Customer"%>
 <%@page import="model.User"%>
@@ -11,8 +12,8 @@
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
     Hotel hotel = (Hotel)session.getAttribute("hotel");
-    String inDate = (String)request.getAttribute("inDate");
-    String outDate = (String)request.getAttribute("outDate");
+    Date inDate = (Date)request.getAttribute("inDate");
+    Date outDate = (Date)request.getAttribute("outDate");
     
 %>
 
@@ -91,11 +92,14 @@
             <form class="form-horizontal">
                 <div class="form-group">
                     <label class="control-label col-md-3">日期</label>
+                    <%
+                    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    %>
                     <div class="col-md-3">
-                        <input name="inDate" type="date" class="form-control" value="<%=inDate%>">
+                        <input name="inDate" type="date" class="form-control" value="<%=format.format(inDate) %>">
                     </div>
                     <div class="col-md-3">
-                        <input name="outDate" type="date" class="form-control" value="<%=outDate %>">
+                        <input name="outDate" type="date" class="form-control" value="<%=format.format(outDate) %>">
                     </div>
                     <input type="submit" class="btn btn-primary" value="搜索">
                 </div>
@@ -203,10 +207,10 @@
 				out.println("<div class=\"form-group\">");
 				out.println("<label class=\"control-label col-md-2\">日期</label>");
 				out.println("<div class=\"col-md-5\">");
-				out.println("<input name=\"order.in_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+inDate+"\">");
+				out.println("<input name=\"order.in_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+format.format(inDate)+"\">");
 				out.println("</div>");
 				out.println("<div class=\"col-md-5\">");
-				out.println("<input name=\"order.out_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+outDate+"\">");
+				out.println("<input name=\"order.out_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+format.format(outDate)+"\">");
 				out.println("</div>");
 				out.println("</div>");
 				out.println("<hr>");

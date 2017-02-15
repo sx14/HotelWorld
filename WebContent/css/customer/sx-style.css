@@ -187,9 +187,11 @@ p{
 }
 
 .sx-label-key{
+    padding-top: 10px;
+    padding-left:20px;
     display: inline-block;
     margin-right: 20px;
-    width: 60px;
+    width: 80px;
     text-align: right;
 }
 
@@ -197,6 +199,8 @@ p{
     display: inline-block;
     width: auto;
     text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .sx-border-all{
@@ -212,10 +216,10 @@ p{
 }
 
 .sx-border-blue{
-    border-top: solid 30px #337ab7;
-    border-left: solid 2px #337ab7;
-    border-right: solid 2px #337ab7;
-    border-bottom: solid 2px #337ab7;
+    border-top: solid 5px #337ab7;
+    border-left: solid 1px silver;
+    border-right: solid 1px silver;
+    border-bottom: solid 1px silver;
     padding-bottom: 20px;
 }
 
@@ -271,9 +275,7 @@ a:hover{
     border-bottom: solid 1px #ddd;
 }
 
-.sx-label{
-    padding-top: 10px;
-}
+
 
 .sx-remove-padding{
     padding:0 !important;
@@ -282,6 +284,22 @@ a:hover{
 .sx-add-padding{
     padding: 15px;
 }
+
+.sx-border-silver{
+    border-top: solid 1px silver;
+    border-left: solid 1px silver;
+    border-right: solid 1px silver;
+    border-bottom: solid 1px silver;
+    padding-bottom: 20px;
+}
+
+.sx-select{
+    padding-left: 10px;
+    width: 60px;
+    height: 2em;
+}
+
+
 
 
 

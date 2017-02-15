@@ -40,7 +40,7 @@ public class RoomServiceImpl implements RoomService{
 			user.setUsername(user.getName());
 			user.setRegister_date(Calendar.getInstance().getTime());
 			userDAO.saveOrUpdate(order.getUser());
-			User u = userDAO.get(order.getUser());
+			User u = userDAO.get(order.getUser().getPhone());
 			order.setUser(u);
 			result = orderDAO.save(order);
 		}
@@ -81,6 +81,11 @@ public class RoomServiceImpl implements RoomService{
 					if (order.getOut_date().compareTo(inDate) <= 0) {
 						orders.remove(order);
 					}else if (order.getIn_date().compareTo(outDate) >= 0) {
+						orders.remove(order);
+					}
+					if (order.getState() == OrderState.CANCEL.getValue()) {
+						orders.remove(order);
+					}else if (order.getState() == OrderState.OUT.getValue()) {
 						orders.remove(order);
 					}
 				}

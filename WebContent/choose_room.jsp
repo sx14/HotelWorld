@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="constant.Config"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.RoomType"%>
@@ -83,8 +84,11 @@
         <div class="date">
           <form class="form-inline" action="chooseRoom" method="post">
             <div class="form-group sx-search">
-              <label>入住</label><input name="inDate" class="form-control sx-search" type="date" placeholder="入住日期" value="<%=inDate %>">
-              <label>离店</label><input name="outDate" class="form-control sx-search" type="date" placeholder="离店日期" value="<%=outDate %>">
+            <%
+            	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            %>
+              <label>入住</label><input name="inDate" class="form-control sx-search" type="date" placeholder="入住日期" value="<%=format.format(inDate) %>">
+              <label>离店</label><input name="outDate" class="form-control sx-search" type="date" placeholder="离店日期" value="<%=format.format(outDate) %>">
             </div>
             <label>共&nbsp;<%=interval %>&nbsp;晚</label>
             <input type="submit" class="btn btn-success sx-right" value="搜索房间">
@@ -112,7 +116,11 @@
           		out.println("<strong>￥<span class=\"sx-big-red\">"+roomType.getPrice()+"</span><br><span class=\"sx-small-green\">(会员价：￥"+roomType.getVip_price()+")</span></strong>");
           		out.println("</div>");
           		out.println("<div class=\"col-md-3 sx-vertical-center\">");
-          		out.println("<a href=\"\" class=\"btn btn-primary\">预定</a>");
+          		if(roomType.getEmptyRoomNum() > 0){
+        	  		out.println("<a href=\"reserveRoom?num=1&tid="+roomType.getTid()+"\" class=\"btn btn-primary\">预定</a>");
+          		}else{
+        	  		out.println("<button class=\"btn btn-primary\" disabled>已满</a>");
+          		}
           		out.println("</div>");
           		out.println("</div>");
           		out.println("</div>");
@@ -126,26 +134,28 @@
         <div>
         <%
         	for(Order order : hotel.getOrders()){
-        		out.println("<div class=\"sx-media-static sx-shadow\">");
-        		out.println("<div class=\"media-left sx-content-center sx-vertical-line\">");
-        		out.println("<img class=\"media-object img-rounded sx-img-small\" src=\""+order.getUser().getImage()+"\" alt=\"...\">");
-        		out.println("<p><span class=\"label label-warning\">金牌评论家</span></p>");
-        		out.println("<p><span class=\"sx-small-blue\">"+order.getUser().getCommentNum()+"</span>次评价</p>");
-        		out.println("</div>");
-        		out.println("<div class=\"media-right\">");
-        		out.println("<p><span class=\"sx-small-blue\">"+order.getComment_head()+"</span></p>");
-        		out.println("<p><span class=\"sx-label-key\">用户评价</span><span class=\"sx-label-value\">");
-        		for(int i = 0 ; i < order.getStar() ; i++){
-        			out.print("<img src=\"../img/star.png\">");
-        		}for(int i = order.getStar() ; i < Config.MAX_STAR ; i++){
-        			out.print("<img src=\"../img/star2.png\">");
+        		if(order.getComment_head() != null){
+        			out.println("<div class=\"sx-media-static sx-shadow\">");
+            		out.println("<div class=\"media-left sx-content-center sx-vertical-line\">");
+            		out.println("<img class=\"media-object img-rounded sx-img-small\" src=\""+order.getUser().getImage()+"\" alt=\"...\">");
+            		out.println("<p><span class=\"label label-warning\">金牌评论家</span></p>");
+            		out.println("<p><span class=\"sx-small-blue\">"+order.getUser().getCommentNum()+"</span>次评价</p>");
+            		out.println("</div>");
+            		out.println("<div class=\"media-right\">");
+            		out.println("<p><span class=\"sx-small-blue\">"+order.getComment_head()+"</span></p>");
+            		out.println("<p><span class=\"sx-label-key\">用户评价</span><span class=\"sx-label-value\">");
+            		for(int i = 0 ; i < order.getStar() ; i++){
+            			out.print("<img src=\"../img/star.png\">");
+            		}for(int i = order.getStar() ; i < Config.MAX_STAR ; i++){
+            			out.print("<img src=\"../img/star2.png\">");
+            		}
+            		out.println("</span></p>");
+            		out.println("<p><span class=\"sx-label-key\">入住时间</span><span class=\"sx-label-value\">"+order.getInDateString()+" --- "+order.getOutDateString()+"</span></p>");
+            		out.println("<p><span class=\"sx-label-key\">房型</span><span class=\"sx-label-value\">"+order.getRoom().getRoomType().getRoomType()+"</span></p>");
+            		out.println("<p>"+order.getComment_content()+"</p>");
+            		out.println("</div>");
+            		out.println("</div>");
         		}
-        		out.println("</span></p>");
-        		out.println("<p><span class=\"sx-label-key\">入住时间</span><span class=\"sx-label-value\">"+order.getInDateString()+" --- "+order.getOutDateString()+"</span></p>");
-        		out.println("<p><span class=\"sx-label-key\">房型</span><span class=\"sx-label-value\">"+order.getRoom().getRoomType().getRoomType()+"</span></p>");
-        		out.println("<p>"+order.getComment_content()+"</p>");
-        		out.println("</div>");
-        		out.println("</div>");
         	}
         %>
         </div>
@@ -169,8 +179,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/vendor/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../../assets/js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

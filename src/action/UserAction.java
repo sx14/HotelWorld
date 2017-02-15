@@ -2,9 +2,13 @@ package action;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionContext;
@@ -29,6 +33,27 @@ public class UserAction extends ActionSupport{
 	//会员卡充值
 	private int chargeMoney;
 	private String password;
+	
+	private void ajax(String content){
+		HttpServletResponse response = ServletActionContext.getResponse();
+		PrintWriter printWriter;
+		try {
+			printWriter = response.getWriter();
+			printWriter.write(content);
+			printWriter.flush();
+			printWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+
+	
+	public String logout(){
+		Map session = ActionContext.getContext().getSession();
+		session.remove("user");
+		return SUCCESS;
+	}
 	
 	public String chargeVIP(){
 		Map session = ActionContext.getContext().getSession();
@@ -89,6 +114,14 @@ public class UserAction extends ActionSupport{
 		}
 	}
 
+	public void checkExists(){
+		boolean isExists = userService.checkExists(user);
+		if (isExists) {
+			ajax("error");
+		}else{
+			ajax("success");
+		}
+	}
 
 	
 	public String registerQuickly(){

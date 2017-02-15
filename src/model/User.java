@@ -39,6 +39,15 @@ public class User {
 	private int money;
 	
 	@Transient
+	public boolean isVIP(){
+		if (visa != null && visa.getMoney()>=Config.VIP_MONEY_LEAST) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	@Transient
 	public int getCommentNum(){
 		if (orders != null) {
 			return orders.size();
@@ -71,7 +80,7 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
 	public Set<Order> getOrders() {
 		return orders;
 	}

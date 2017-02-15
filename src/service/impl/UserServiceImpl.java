@@ -1,5 +1,7 @@
 package service.impl;
 
+import java.util.List;
+
 import dao.UserDAO;
 import dao.VisaDAO;
 import model.User;
@@ -20,7 +22,7 @@ public class UserServiceImpl implements UserService{
 		boolean result = userDAO.saveOrUpdate(user);
 		User u = null;
 		if (result == true) {
-			u = userDAO.get(user);
+			u = userDAO.get(user.getPhone());
 		}
 		return u;
 	}
@@ -32,17 +34,25 @@ public class UserServiceImpl implements UserService{
 	}
 	@Override
 	public User login(User user) {
-		return userDAO.get(user);
+		User u = userDAO.get(user.getPhone());
+		if (user.getPassword().equals(u.getPassword())) {
+			return u;
+		}else {
+			return null;
+		}
 	}
 	@Override
 	public boolean saveOrUpdate(User user) {
 		return userDAO.saveOrUpdate(user);
 	}
-//	@Override
-//	public boolean saveOrUpdate(Visa visa) {
-//		return visaDAO.saveOrUpdate(visa);
-//	}
-	
-	
+	@Override
+	public boolean checkExists(User user) {
+		User u = userDAO.get(user.getPhone());
+		if (u == null) {
+			return false;
+		}else {
+			return true;
+		}
+	}
 
 }

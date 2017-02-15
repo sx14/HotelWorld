@@ -1,6 +1,8 @@
 package action;
 
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -8,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -37,7 +42,22 @@ public class HotelAction extends ActionSupport{
 	private RoomType room2;//用于注册
 	private RoomType room3;//用于注册
 	
+	private int level;//酒店星级，用于搜索酒店
+	
 	private int hid;//用于显示酒店详细
+	
+	private void ajax(String content){
+		HttpServletResponse response = ServletActionContext.getResponse();
+		PrintWriter printWriter;
+		try {
+			printWriter = response.getWriter();
+			printWriter.write(content);
+			printWriter.flush();
+			printWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 	
 
 	
@@ -177,17 +197,16 @@ public class HotelAction extends ActionSupport{
 
 	public String chooseHotel(){
 		Date in,out;
-		Date today = Calendar.getInstance().getTime();
 		if (inDate != null && outDate != null) {
 			in = inDate;
 			out = outDate;
-			if (in.after(out)) {
-				in = today;
-				out = today;
-			}
 		}else {
+			Calendar calendar = Calendar.getInstance();
+			Date today = calendar.getTime();
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			Date tomorrow = calendar.getTime();
 			in = today;
-			out = today;
+			out = tomorrow;
 		}
 		if (expectedCity == null) {
 			expectedCity = Config.DEFAULT_CITY;
@@ -300,6 +319,14 @@ public class HotelAction extends ActionSupport{
 
 	public void setRoomService(RoomService roomService) {
 		this.roomService = roomService;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	
 	

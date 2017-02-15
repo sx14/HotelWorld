@@ -25,11 +25,12 @@ public class UserDAOImpl implements UserDAO{
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+
 	@Override
-	public User get(User user) {
+	public User get(String phone) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		String hql = "from User where phone='"+user.getPhone()+"' and password='"+user.getPassword()+"'";
+		String hql = "from User where phone='"+phone+"'";
 		Query query = session.createQuery(hql);
 		List users = query.getResultList();
 		if (!users.isEmpty()) {

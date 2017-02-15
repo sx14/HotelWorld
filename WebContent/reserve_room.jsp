@@ -1,5 +1,17 @@
+<%@page import="model.Hotel"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@page import="model.Order" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme() + "://"
+            + request.getServerName() + ":" + request.getServerPort()
+            + path + "/";
+    List<Order> orders = (List<Order>)session.getAttribute("orders");
+%>
 <!DOCTYPE html>
 <html lang="en">
+<base href="<%=basePath%>"></base>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,14 +24,14 @@
     <title>Theme Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../css/theme.css" rel="stylesheet">
-    <link href="../css/customer/sx-reserve-room.css" rel="stylesheet">
-    <link href="../css/customer/sx-style.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
+    <link href="css/customer/sx-reserve-room.css" rel="stylesheet">
+    <link href="css/customer/sx-style.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -77,17 +89,32 @@
               <div class="panel-body">
                 <h4><strong>房间信息</strong></h4>
                 <hr>
-
-                <p><label class="sx-label-key">入住房型</label><span class="sx-label-value">单人间</span><span class="sx-label-value">(可入住1人)</span></p>
-                <p><label class="sx-label-key">入住日期</label><span class="sx-label-value">2016-10-1</span><span class="sx-small-grey">至</span><span class="sx-label-value">2016-10-1</span></p>
-                <p><label class="sx-label-key">房间单价</label><span class="sx-label-value"><span class="label label-success">会员价</span>￥100</span></p>
+				<% 
+					Order order = orders.get(0);
+    		  		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				%>
+                <p><label class="sx-label-key">入住房型</label><span class="sx-label-value"><%=order.getRoom().getRoomType().getRoomType() %></span><span class="sx-label-value">(可入住<%=order.getRoom().getRoomType().getCapacity() %>人)</span></p>
+                <p><label class="sx-label-key">入住日期</label><span class="sx-label-value"><%=format.format(order.getIn_date()) %></span><span class="sx-small-grey">至</span><span class="sx-label-value"><%=format.format(order.getOut_date()) %></span></p>
+                <%
+                	if(order.getIs_vip() == 1){
+                		out.println("<p><label class=\"sx-label-key\">房间单价</label><span class=\"sx-label-value\"><span class=\"label label-success\">会员价</span>￥"+order.getVip_price()+"</span></p>");
+                	}else{
+                		out.println("<p><label class=\"sx-label-key\">房间单价</label><span class=\"sx-label-value\"><span class=\"label label-warning\">非会员</span>￥"+order.getPrice()+"</span></p>");
+                	}
+                %>
+                
                 <p><label class="sx-label-key">房间个数</label>
                   <span class="sx-label-value">
                   <select class="sx-select">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
+                  	<%
+                  		for(int i = 1 ; i < 4 ; i++){
+                  			if(orders.size() == i){
+                  				out.println("<option value=\""+i+"\" selected>"+i+"</option>");
+                  			}else{
+                  				out.println("<option value=\""+i+"\">"+i+"</option>");
+                  			}
+                  		}
+                  	%>
                   </select>
                   </span>
                 </p>
@@ -95,20 +122,22 @@
 
                 <h4><strong>入住信息</strong></h4>
                 <hr>
-                <form>
-                  <div class="form-group form-inline">
-                    <label for="exampleInputName1" class="sx-label-key" >入住人1</label>
-                    <input type="text" class="form-control" id="exampleInputName1" placeholder="入住人姓名">
-                    <input type="text" class="form-control" placeholder="联系电话">
-                  </div>
-                  <div class="form-group form-inline">
-                    <label for="exampleInputName2" class="sx-label-key">入住人2</label>
-                    <input type="text" class="form-control" id="exampleInputName2" placeholder="入住人姓名">
-                    <input type="text" class="form-control" placeholder="联系电话">
-                  </div>
+                <form action="saveOrders" method="post">
+                <%
+                	for(int i = 0 ; i < orders.size() ; i ++){
+                		Order o = orders.get(i);
+                		out.println("<div class=\"form-group form-inline\">");
+                		out.println("<label for=\"exampleInputName1\" class=\"sx-label-key\" >入住人"+(i+1)+"</label>");
+                		out.println("<input name=\"customer"+(i+1)+".name\" type=\"text\" class=\"form-control\" id=\"exampleInputName1\" placeholder=\"入住人姓名\">");
+                		out.println("<input name=\"customer"+(i+1)+".id_num\" type=\"text\" class=\"form-control\" placeholder=\"身份证号\">");
+                		out.println("<input name=\"customer"+(i+1)+".oid\" type=\"hidden\" value=\""+o.getOid()+"\">");
+                		out.println("</div>");
+                	}
+                %>
+
                   <div>
                     <label class="sx-label-key"></label>
-                    <button class="btn btn-info">提交订单</button>
+                    <input type="submit" class="btn btn-info" value="提交订单">
                   </div>
                 </form>
               </div>
@@ -118,11 +147,14 @@
             <div class="row">
               <img src="../img/hotel-mid-1.jpg" class="sx-img-star-hotel">
               <div class="sx-padding-all">
-                <p class="sx-big-blue">南京啦啦啦店</p>
+              <%
+              	Hotel hotel = (Hotel)session.getAttribute("hotel");
+              %>
+                <p class="sx-big-blue"><%=(hotel.getCity()+hotel.getHotel_name()) %></p>
                 <p>地址：江苏省南京市鼓楼区汉口路22号</p>
-                <p><span class="sx-big-blue">4.9</span>/5分</p>
-                <p>￥<span class="sx-big-red">298</span>起</p>
-                <p><span class="sx-small-blue">500000条评价</span></p>
+                <p><span class="sx-big-blue"><%=hotel.getAvgStar() %></span>/5分</p>
+                <p>￥<span class="sx-big-red"><%=hotel.getLowestPrice() %></span>起</p>
+                <p><span class="sx-small-blue"><%=hotel.getCommentNum() %>条评价</span></p>
               </div>
             </div>
           </div>
@@ -134,9 +166,8 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
+   	<script src="=js/vendor/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="../../assets/js/docs.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

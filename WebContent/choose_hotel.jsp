@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="constant.City"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Hotel" %>
@@ -48,10 +49,9 @@
             </div>
             <div id="navbar1" class="collapse navbar-collapse">
               <ul class="nav navbar-nav" style="float:right">
-                <li class="active"><a href="personalHome">我的Hotel</a></li>
-                <li><a href="register_hotel.jsp">我要开店</a></li>
+                <li class="active"><a href="chooseHotel">主页</a></li>
+                <li><a href="personalHome">我的Hotel</a></li>
                 <li><a href="#contact">退出登录</a></li>
-                <li><a href="#contact">Contact</a></li>
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -71,21 +71,21 @@
       </ol>
       <div class="carousel-inner" role="listbox">
         <div class="item active">
-          <img class="first-slide" src="../img/long1.jpg" alt="First slide">
+          <img class="first-slide" src="img/long1.jpg" alt="First slide">
           <div class="container">
             <div class="carousel-caption">
             </div>
           </div>
         </div>
         <div class="item">
-          <img class="second-slide" src="../img/long2.jpg" alt="Second slide">
+          <img class="second-slide" src="img/long2.jpg" alt="Second slide">
           <div class="container">
             <div class="carousel-caption">
             </div>
           </div>
         </div>
         <div class="item">
-          <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+          <img class="third-slide" src="img/long3.jpg" alt="Third slide">
           <div class="container">
             <div class="carousel-caption">
             </div>
@@ -103,34 +103,40 @@
     </div><!-- /.carousel -->
 
     <div class="sx-background sx-padding-all">
-      <form class="form-inline container" action="searchHotel" method="post">
+      <form class="form-inline container" action="chooseHotel" method="post">
         <div class="form-group sx-search">
           <label>城市</label>
           <select class="form-control" name="expectedCity">
           <%
+          	String expectedCity = (String)session.getAttribute("expectedCity");
           	for(City city : (City[])request.getAttribute("cities")){
-          %>
-          <option>
-          <%
-          	city.getValue();
-          %>
-          </option>
-          <%
+          		if(expectedCity.equals(city.getValue())){
+	          		out.println("<option value=\""+city.getValue()+"\" selected>"+city.getValue()+"</option>");
+          		}else{
+          			out.println("<option value=\""+city.getValue()+"\">"+city.getValue()+"</option>");
+          		}
           	}
           %>
           </select>
         </div>
         <div class="form-group sx-search">
           <label>星级</label>
-          <select class="form-control" name="level">
-            <option value="500">A级（500￥起）</option>
-            <option value="300">B级（300￥起）</option>
-            <option value="100">C级（100￥起）</option>
+          <select class="form-control" name="star">
+          	<option value="0" selected>不限</option>
+            <option value="1">A级（500￥起）</option>
+            <option value="2">B级（300￥起）</option>
+            <option value="3">C级（100￥起）</option>
           </select>
         </div>
         <div class="form-group sx-search">
-          <label>入住</label><input name="inDate" class="form-control sx-search" type="date" placeholder="入住日期">
-          <label>离店</label><input name="outDate" class="form-control sx-search" type="date" placeholder="离店日期">
+       	<%
+       		Date inDate = (Date)session.getAttribute("inDate");
+       		Date outDate = (Date)session.getAttribute("outDate");
+       		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+       		
+       	%>
+          <label>入住</label><input name="inDate" class="form-control sx-search" type="date" placeholder="入住日期" value="<%=format.format(inDate) %>">
+          <label>离店</label><input name="outDate" class="form-control sx-search" type="date" placeholder="离店日期" value="<%=format.format(outDate)%>">
         </div>
         <input type="submit" class="btn btn-primary" value="搜索店铺">
       </form>
@@ -144,7 +150,7 @@
     <div class="container marketing">
 
       <div class="row">
-        <p class="sx-star-head"><img src="/img/star-star.png"><%=(String)request.getAttribute("expectedCity") %>-明星店铺</p>
+        <p class="sx-star-head"><img src="img/star-star.png"><%=(String)request.getAttribute("expectedCity") %>-明星店铺</p>
       </div>
 
       <!-- Three columns of text below the carousel -->
@@ -166,19 +172,6 @@
 			out.println("</div>");
 		}
       %>	
-        <!-- /.col-lg-4 -->
-        <div class="col-lg-4 sx-star-block">
-          <img class="img-responsive sx-img-star-hotel" src="../img/hotel-mid-2.jpg" alt="Generic placeholder image">
-          <p><a class="sx-big-blue">南京啦啦啦店</a></p>
-          <p>销量也还可以，开业时间最长，接待的客人最多，提供最特殊的服务，啊哈哈哈</p>
-          <p><a class="btn btn-default" href="#" role="button">进店瞧瞧 &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4 sx-star-block sx-star-block-right">
-          <img class="img-responsive sx-img-star-hotel" src="../img/hotel-mid-1.jpg" alt="Generic placeholder image">
-          <p><a class="sx-big-blue">南京也不知道是哪家店</a></p>
-          <p>刚开业不久，啥业绩也没有，主要是没有别的店了，所以充个数</p>
-          <p><a class="btn btn-default" href="#" role="button">进店瞧瞧 &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
       <!-- START THE FEATURETTES -->
@@ -292,11 +285,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../js/jquery.min.js"><\/script>')</script>
+    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="js/holder.min.js"></script>
-
   </body>
 </html>

@@ -4,5 +4,5 @@ import model.User;
 
 public interface UserDAO {
 	public boolean saveOrUpdate(User user);
-	public User get(User user);
+	public User get(String phone);
 }

@@ -47,7 +47,8 @@ public class Room {
 	
 	@Transient
 	public String getRoomName(){
-		return String.format("%04d", num);
+		String roomName = roomType.getType() + String.format("%03d", num);
+		return roomName;
 	}
 	
 

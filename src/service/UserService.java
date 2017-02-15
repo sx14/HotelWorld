@@ -8,4 +8,5 @@ public interface UserService {
 	public User registerQuickly(User user);
 	public User login(User user);
 	public boolean saveOrUpdate(User user);
+	public boolean checkExists(User user);
 }

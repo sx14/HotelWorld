@@ -6,16 +6,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="customer",schema="hotel_world")
 public class Customer {
 	private int cid;
 	private Order order;
-
 	private String name;
 	private String id_num;
 	
+	private int oid;
+	
+	@Transient
+	public int getOid() {
+		return oid;
+	}
+	public void setOid(int oid) {
+		this.oid = oid;
+	}
 	@ManyToOne
 	@JoinColumn(name="oid")
 	public Order getOrder() {

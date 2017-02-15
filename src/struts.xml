@@ -67,13 +67,32 @@
 			<result name="success">manage_room.jsp</result>
 		</action>
 		
-		<action name="handleOrder" class="action.RoomAction" method="handleOrder">
+		<action name="handleOrder" class="action.OrderAction" method="handleOrder">
 			<result name="success">register_success.jsp</result>
 		</action>
 		
 		<action name="chooseRoom" class="action.RoomAction" method="chooseRoom">
 			<result name="success">choose_room.jsp</result>
 		</action>
+		
+		<action name="reserveRoom" class="action.RoomAction" method="reserveRoom">
+			<result name="success">reserve_room.jsp</result>
+		</action>
+		
+		<action name="saveOrders" class="action.OrderAction" method="saveOrders">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="cancelOrder" class="action.OrderAction" method="cancelOrder">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="logout" class="action.UserAction" method="logout">
+			<result name="success">/</result>
+		</action>
+		
+		<!-- =============ajax============= -->
+		<action name="checkExists" class="action.UserAction" method="checkExists"/>
 		
 	</package>
 </struts>

@@ -1,5 +1,4 @@
 package dao.impl;
-
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -7,8 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
-
 import dao.OrderDAO;
 import model.Order;
 
@@ -77,5 +74,16 @@ public class OrderDAOImpl implements OrderDAO{
 		}else{
 			return null;
 		}
+	}
+	@Override
+	public boolean save(List<Order> orders) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		for(Order order : orders){
+			session.save(order);
+		}
+		transaction.commit();
+		session.close();
+		return true;
 	}
 }

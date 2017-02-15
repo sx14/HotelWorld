@@ -141,7 +141,7 @@
                             		Room r = o.getRoom();
                             		out.println("<tr>");
                             		out.println("<th>"+h.getCity()+h.getHotel_name()+"</th>");
-                            		out.println("<td>"+r.getRoomType()+"</td>");
+                            		out.println("<td>"+r.getRoomType().getRoomType()+"</td>");
                             		out.println("<td>");
                             		out.println("<p><span class=\"label label-primary\">住</span>"+o.getInDateString()+"</p>");
                             		out.println("<p><span class=\"label label-success\">离</span>"+o.getOutDateString()+"</p>");
@@ -270,30 +270,30 @@
 		}else if(order.getState() == OrderState.OUT.getValue()){
 			out.println("<span class=\"label label-danger\">已退房</span></h4>");
 		}else{
-			out.println("<span class=\"label label-danger\">状态未知</span></h4>");
+			out.println("<span class=\"label label-danger\">已取消</span></h4>");
 		}
 		out.println("</div>");
 		out.println("<div class=\"modal-body\">");
-		out.println("<form class=\"form-horizontal\">");
+		out.println("<div class=\"form-horizontal\">");
 		out.println("<div class=\"form-group\">");
 		out.println("<label class=\"control-label col-md-2\">用户名</label>");
 		out.println("<div class=\"col-md-10\">");
-		out.println("<input type=\"text\" class=\"form-control\""+order.getUser().getUsername()+">");
+		out.println("<input type=\"text\" class=\"form-control\" value=\""+order.getUser().getUsername()+"\" disabled>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("<div class=\"form-group\">");
 		out.println("<label class=\"control-label col-md-2\">联系电话</label>");
 		out.println("<div class=\"col-md-10\">");
-		out.println("<input type=\"text\" class=\"col-md-10 form-control\""+order.getUser().getPhone()+">");
+		out.println("<input type=\"text\" class=\"col-md-10 form-control\" value=\""+order.getUser().getPhone()+"\" disabled>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("<div class=\"form-group\">");
 		out.println("<label class=\"control-label col-md-2\">日期</label>");
 		out.println("<div class=\"col-md-5\">");
-		out.println("<input type=\"text\" class=\"form-control col-md-5\""+order.getInDateString()+">");
+		out.println("<input type=\"text\" class=\"form-control col-md-5\" value=\""+order.getInDateString()+"\" disabled>");
 		out.println("</div>");
 		out.println("<div class=\"col-md-5\">");
-		out.println("<input type=\"text\" class=\"form-control col-md-5\""+order.getOutDateString()+">");
+		out.println("<input type=\"text\" class=\"form-control col-md-5\" value=\""+order.getOutDateString()+"\" disabled>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("<hr>");
@@ -302,10 +302,10 @@
 		for(Customer customer : customers){
 			out.println("<div class=\"form-group\">");
 			out.println("<div class=\"col-md-4\">");
-			out.println("<input type=\"text\" class=\"form-control\" value=\""+customer.getName()+"\">");
+			out.println("<input type=\"text\" class=\"form-control\" value=\""+customer.getName()+"\" disabled>");
 			out.println("</div>");
 			out.println("<div class=\"col-md-8\">");
-			out.println("<input type=\"text\" class=\"form-control\" value=\""+customer.getId_num()+"\">");
+			out.println("<input type=\"text\" class=\"form-control\" value=\""+customer.getId_num()+"\" disabled>");
 			out.println("</div>");
 			out.println("</div>");
 		}
@@ -314,30 +314,29 @@
 		out.println("<div class=\"form-group\">");
 		out.println("<label class=\"control-label col-md-2\">支付方式</label>");
 		out.println("<div class=\"col-md-2\">");
-		out.println("<select class=\"form-control\">");
+		out.println("<select class=\"form-control\" disabled>");
 		if(user.getVisa() != null){
 			out.println("<option>会员卡</option>");
-			out.println("<option>现金</option>");
 		}else{			
 			out.println("<option>现金</option>");
 		}
 		out.println("</select>");
 		out.println("</div>");
 		out.println("<div class=\"col-md-8\">");
-		out.println("<span class=\"label label-success control-label\">房费</span><label>100000.5￥</label><label class=\"control-label\">(会员价1￥)</label>");
+		out.println("<span class=\"label label-success control-label\">房费</span><label>"+order.getPrice()+"￥</label><label class=\"control-label\">(会员价"+order.getVip_price()+"￥)</label>");
 		out.println("</div>");			
 		out.println("</div>");
-		out.println("</form>");
 		out.println("</div>");
 		out.println("<div class=\"modal-footer\">");
+		out.println("<form class=\"form-horizontal\" action=\"cancelOrder\" method=\"get\">");
+		out.println("<input name=\"oid\" type=\"hidden\" class=\"btn btn-danger\" value=\""+order.getOid()+"\">");
 		if(order.getState() == OrderState.RESERVE.getValue()){
-			out.println("<input type=\"submit\" class=\"btn btn-success\" value=\"确认付款\">");
 			out.println("<input type=\"submit\" class=\"btn btn-danger\" value=\"取消预订\">");
 		}else{
 			out.println("<input type=\"submit\" class=\"btn btn-danger\" value=\"取消预订\" disabled>");
 		}
 		out.println("<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">返回</button>");
-		out.println("</div>");
+		out.println("</form>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("</div>");
@@ -380,7 +379,6 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/docs.min.js"></script>

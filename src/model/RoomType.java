@@ -1,6 +1,8 @@
 package model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -34,6 +36,17 @@ public class RoomType {
 	private String imgFileName;
 	private String imgContentType;
 	
+	@Transient
+	public List<Room> getEmptyRooms(int num){
+		ArrayList<Room> rooms = new ArrayList<>();
+		for(Room room : this.rooms){
+			if (room.getOrders().size() == 0) {
+				rooms.add(room);
+			}
+		}
+		return rooms;
+	}
+	
 	
 	@Transient
 	public int getEmptyRoomNum(){
@@ -47,7 +60,6 @@ public class RoomType {
 	}
 	
 	@OneToMany(mappedBy="roomType",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-//	@JoinColumn(name="tid")
 	public Set<Room> getRooms() {
 		return rooms;
 	}

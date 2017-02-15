@@ -90,7 +90,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-10">
-                            <button type="submit" class="btn btn-default col-md-4 col-md-offset-4">注册</button>
+                            <button type="submit" class="btn btn-default col-md-4 col-md-offset-4" onclick="checkExists()">注册</button>
                         </div>
                     </div>
                 </form>
@@ -110,7 +110,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/customer/sx-ajax.js"></script>
 </body>
 </html>
