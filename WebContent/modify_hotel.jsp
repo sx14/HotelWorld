@@ -1,4 +1,5 @@
-<%@page import="vo.RoomVO"%>
+<%@page import="model.Room"%>
+<%@page import="model.RoomType"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Hotel" %>
 <%
@@ -86,19 +87,22 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h4><strong>新店注册</strong></h4>
+            <h4><strong>修改店铺</strong></h4>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal" action="updateHotel">
+            <form class="form-horizontal" action="updateHotel" method="post" enctype="multipart/form-data">
                 <div class="col-md-6 sx-col-left">
                     <div class="form-group">
+                    	<input name="hotel.hid" value="<%=myHotel.getHid()%>" type="hidden">
+                    	<input name="hotel.register_date" value="<%=myHotel.getRegister_date()%>" type="hidden">
+                    	<input name="hotel.uid" value="<%=myHotel.getUser().getUid()%>" type="hidden">
                         <label class="col-sm-2 control-label">酒店名称</label>
                         <div class="col-sm-6">
-                            <input name="user.hotel" type="text" class="form-control" placeholder="请输入名称" value="<%=myHotel.getHotel_name() %>" disabled>
+                            <input name="hotel.hotel_name" type="text" class="form-control" placeholder="请输入名称" value="<%=myHotel.getHotel_name() %>" readonly="true">
                         </div>
                         <div class="col-sm-3">
-                            <select name="hotel.star" class="form-control" disabled>
-                                <option value="1"><%=myHotel.getStarString() %></option>
+                            <select name="hotel.star" class="form-control" readonly="true">
+                                <option value="<%=myHotel.getStar() %>"><%=myHotel.getStarString() %></option>
                             </select>
                         </div>
                     </div>
@@ -106,7 +110,7 @@
                         <label class="col-sm-2 control-label">注册资金</label>
                         <div class="col-sm-9">
                             <div class="input-group">
-                                <input name="hotel.start_money" type="number" class="form-control"  placeholder="请填入数字，如20" value="<%=myHotel.getStart_money() %>" disabled>
+                                <input name="hotel.start_money" type="number" class="form-control"  placeholder="请填入数字，如20" value="<%=myHotel.getStart_money() %>" readonly="true">
                                 <div class="input-group-addon">万元</div>
                             </div>
                         </div>
@@ -114,26 +118,26 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">姓名</label>
                         <div class="col-sm-9">
-                            <input name="hotel.name" type="text" class="form-control" placeholder="请输入姓名" value="<%=myHotel.getName() %>" disabled>
+                            <input name="hotel.name" type="text" class="form-control" placeholder="请输入姓名" value="<%=myHotel.getName() %>" readonly="true">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">身份证号</label>
                         <div class="col-sm-9">
-                            <input name="hotel.id_num" type="number" class="form-control" placeholder="请输入身份证号" value="<%=myHotel.getId_num() %>" disabled>
+                            <input name="hotel.id_num" type="number" class="form-control" placeholder="请输入身份证号" value="<%=myHotel.getId_num() %>" readonly="true">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">邮箱</label>
                         <div class="col-sm-9">
-                            <input name="hotel.email" type="email" class="form-control" placeholder="xxxx@xxx.xx" value="<%=myHotel.getEmail() %>" disabled>
+                            <input name="hotel.email" type="email" class="form-control" placeholder="xxxx@xxx.xx" value="<%=myHotel.getEmail() %>" readonly="true">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">酒店位置</label>
                         <div class="col-sm-9">
-                            <select name="hotel.city" class="form-control" disabled>
-                                <option value ="北京"><%=myHotel.getCity()%></option>
+                            <select name="hotel.city" class="form-control" readonly="true">
+                                <option value ="<%=myHotel.getCity() %>"><%=myHotel.getCity()%></option>
                             </select>
                         </div>
                     </div>
@@ -146,18 +150,19 @@
                 </div>
                 <div class="col-md-6 sx-col-right">
                 	<%
-                		for(RoomVO roomVO : myHotel.getRoomVOs()){
+                		for(RoomType room : myHotel.getRoomTypes()){
                 			out.println("<div class=\"form-group\">");
-                			out.println("<label class=\"col-sm-2 control-label\">房型"+roomVO.getType()+"</label>");
+                			out.println("<input type=\"hidden\" name=\"room"+room.getType()+".rid\" value=\""+room.getTid()+"\">");
+                			out.println("<label class=\"col-sm-2 control-label\">房型"+room.getType()+"</label>");
                 			out.println("<div class=\"col-sm-4\">");
                 			out.println("<div class=\"input-group\">");
-                			out.println("<input name=\"room"+roomVO.getType()+".capacity\" type=\"number\" class=\"form-control\" placeholder=\"容量\" value=\""+roomVO.getCapacity()+"\">");
+                			out.println("<input name=\"room"+room.getType()+".capacity\" type=\"number\" class=\"form-control\" placeholder=\"容量\" value=\""+room.getCapacity()+"\">");
                 			out.println("<div class=\"input-group-addon\">人数(人)</div>");
                 			out.println("</div>");
                 			out.println("</div>");
                 			out.println("<div class=\"col-sm-5\">");
                 			out.println("<div class=\"input-group\">");
-                			out.println("<input name=\"room"+roomVO.getType()+".num\" type=\"number\" class=\"form-control\" placeholder=\"数量\"  value=\""+roomVO.getNum()+"\">");
+                			out.println("<input name=\"room"+room.getType()+".num\" type=\"number\" class=\"form-control\" placeholder=\"数量\"  value=\""+room.getNum()+"\">");
                 			out.println("<div class=\"input-group-addon\">房间(间)</div>");
                 			out.println("</div>");
                 			out.println("</div>");
@@ -166,13 +171,13 @@
                 			out.println("<label class=\"col-sm-2 control-label\"></label>");
                 			out.println("<div class=\"col-sm-4\">");
                 			out.println("<div class=\"input-group\">");
-                			out.println("<input name=\"room"+roomVO.getType()+".price\" type=\"number\" class=\"form-control\" placeholder=\"单价\" value=\""+roomVO.getPrice()+"\">");
+                			out.println("<input name=\"room"+room.getType()+".price\" type=\"number\" class=\"form-control\" placeholder=\"单价\" value=\""+room.getPrice()+"\">");
                 			out.println("<div class=\"input-group-addon\">单价(￥)</div>");
                 			out.println("</div>");
                 			out.println("</div>");
                 			out.println("<div class=\"col-sm-5\">");
                 			out.println("<div class=\"input-group\">");
-                			out.println("<input name=\"room"+roomVO.getType()+".vip_price\" type=\"number\" class=\"form-control\" placeholder=\"会员价\" value=\""+roomVO.getVip_price()+"\">");
+                			out.println("<input name=\"room"+room.getType()+".vip_price\" type=\"number\" class=\"form-control\" placeholder=\"会员价\" value=\""+room.getVip_price()+"\">");
                 			out.println("<div class=\"input-group-addon\">会员价(￥)</div>");
                 			out.println("</div>");
                 			out.println("</div>");
@@ -180,10 +185,7 @@
                 			out.println("<div class=\"form-group\">");
                 			out.println("<label class=\"col-sm-2 control-label\"></label>");
                 			out.println("<div class=\"col-sm-9\">");
-                			out.println("<div class=\"input-group\">");
-                			out.println("<div class=\"input-group-addon\">上传图片</div>");
-                			out.println("<input name=\"room"+roomVO.getType()+".image\" type=\"file\" class=\"form-control\">");
-                			out.println("</div>");
+                			out.println("<input name=\"room"+room.getType()+".img\" type=\"file\" class=\"form-control\">");
                 			out.println("</div>");
                 			out.println("</div>");
                 			out.println("<hr>");

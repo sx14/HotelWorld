@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,7 +32,8 @@ public class Order {
 	private Set<Customer> customers;
 	private User user;
 	private int star;
-	private String comment_o;
+	private String comment_content;
+	private String comment_head;
 	private Hotel hotel;
 	private Room room;
 	private int state;
@@ -99,12 +102,23 @@ public class Order {
 	public void setStar(int star) {
 		this.star = star;
 	}
-	public String getComment_o() {
-		return comment_o;
+	
+	public String getComment_content() {
+		return comment_content;
 	}
-	public void setComment_o(String comment_o) {
-		this.comment_o = comment_o;
+
+	public void setComment_content(String comment_content) {
+		this.comment_content = comment_content;
 	}
+
+	public String getComment_head() {
+		return comment_head;
+	}
+
+	public void setComment_head(String comment_head) {
+		this.comment_head = comment_head;
+	}
+
 	@ManyToOne(targetEntity=User.class)
 	@JoinColumn(name="uid")
 	public User getUser() {
@@ -117,7 +131,9 @@ public class Order {
 		return in_date;
 	}
 	
-	@ManyToOne(targetEntity=Room.class)
+	
+	
+	@ManyToOne
 	@JoinColumn(name="rid")
 	public Room getRoom() {
 		return room;
@@ -153,8 +169,8 @@ public class Order {
 		return format.format(out_date);
 	}
 	
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name="oid")
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+//	@JoinColumn(name="oid")
 	public Set<Customer> getCustomers() {
 		return customers;
 	}

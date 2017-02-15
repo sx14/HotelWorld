@@ -16,8 +16,13 @@ public class UserServiceImpl implements UserService{
 		this.visaDAO = visaDAO;
 	}
 	@Override
-	public boolean registerQuickly(User user) {
-		return userDAO.saveOrUpdate(user);
+	public User registerQuickly(User user) {
+		boolean result = userDAO.saveOrUpdate(user);
+		User u = null;
+		if (result == true) {
+			u = userDAO.get(user);
+		}
+		return u;
 	}
 	public UserDAO getUserDAO() {
 		return userDAO;
@@ -33,10 +38,10 @@ public class UserServiceImpl implements UserService{
 	public boolean saveOrUpdate(User user) {
 		return userDAO.saveOrUpdate(user);
 	}
-	@Override
-	public boolean saveOrUpdate(Visa visa) {
-		return visaDAO.saveOrUpdate(visa);
-	}
+//	@Override
+//	public boolean saveOrUpdate(Visa visa) {
+//		return visaDAO.saveOrUpdate(visa);
+//	}
 	
 	
 

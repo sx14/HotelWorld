@@ -82,6 +82,7 @@
     <bean id="hotelService" class="service.impl.HotelServiceImpl" scope="prototype">
     	<property name="hotelDAO" ref="hotelDAOImpl"></property>
     	<property name="hotelDraftDAO" ref="hotelDraftDAOImpl"></property>
+    	<property name="roomDAO" ref="roomDAOImpl"></property>
     </bean>
     
     <bean id="hotelDAOImpl" class="dao.impl.HotelDAOImpl" scope="prototype">
@@ -99,6 +100,22 @@
     </bean>
     
     <bean id="orderDAOImpl" class="dao.impl.OrderDAOImpl" scope="prototype">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================room=========================== -->
+    <bean id="roomAction" class="action.RoomAction" scope="prototype">
+    	<property name="roomService" ref="roomService"></property>
+    </bean>
+    
+    <bean id="roomService" class="service.impl.RoomServiceImpl" scope="prototype">
+    	<property name="roomDAO" ref="roomDAOImpl"></property>
+    	<property name="hotelDAO" ref="hotelDAOImpl"></property>
+    	<property name="orderDAO" ref="orderDAOImpl"></property>
+    	<property name="userDAO" ref="userDAOImpl"></property>
+    </bean>
+    
+    <bean id="roomDAOImpl" class="dao.impl.RoomDAOImpl" scope="prototype">
     	<property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
     

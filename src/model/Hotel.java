@@ -2,9 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,10 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import constant.ApplyState;
+import constant.Config;
 import constant.OrderState;
-import vo.RoomVO;
 
 @Entity
 @Table(name="hotel",schema="hotel_world")
@@ -29,19 +27,72 @@ public class Hotel implements Serializable{
 	private String city;
 	private double start_money;
 	private Date register_date;
-	private Set<Room> rooms;
+	private Set<RoomType> roomTypes;
 	private Set<Order> orders;
 	private User user;
 	private int star;
-	private String image_small;
-	private String image_mid;
-	private String image_big;
+	private String image_small;	//酒店图片
+	private String image_mid;	//酒店图片
+	private String image_big;	//酒店图片
 	private String name;
 	private String description;
 	private String hotel_name;
 	private String id_num;
 	private String email;
 	private int state;
+	
+	@Transient
+	public Room getRoom(int rid){
+		Room room = null;
+		for(RoomType roomType : roomTypes){
+			for(Room r : roomType.getRooms()){
+				if (r.getRid() == rid) {
+					room = r;
+					break;
+				}
+			}
+		}
+		return room;
+	}
+	
+	@Transient
+	public String getGoodComment(){
+		for(Order order : orders){
+			if (order.getStar() == Config.MAX_STAR) {
+				return order.getComment_content();
+			}
+		}
+		return Config.DEFAULT_COMMENT;
+	}
+	
+	@Transient
+	public int getEmptyRoomNum(int roomType){
+		int sum = 0;
+		for(RoomType roomT : roomTypes){
+			if (roomT.getType() == roomType) {
+				for(Room room : roomT.getRooms()){
+					if (room.getOrders().size() == 0) {
+						sum ++;
+					}
+				}
+				break;
+			}
+		}
+		return sum;
+	}
+	
+	@Transient
+	public int getAllEmptyRoomNum(){
+		int sum = 0;
+		for(RoomType roomType : roomTypes){
+			for(Room room : roomType.getRooms()){
+				if (room.getOrders().size() == 0) {
+					sum ++;
+				}
+			}
+		}
+		return sum;
+	}
 	
 
 	@Transient
@@ -58,17 +109,7 @@ public class Hotel implements Serializable{
 		}
 		return sum;
 	}
-	
-	private List<RoomVO> roomVOs;
-	
-	@Transient
-	public List<RoomVO> getRoomVOs() {
-		return roomVOs;
-	}
 
-	public void setRoomVOs(List<RoomVO> roomVOs) {
-		this.roomVOs = roomVOs;
-	}
 
 	public int getState() {
 		return state;
@@ -157,7 +198,7 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getLowestPrice(){
 		int lowest = Integer.MAX_VALUE;
-		for(Room room : rooms){
+		for(RoomType room : roomTypes){
 			if (room.getPrice() < lowest) {
 				lowest = room.getPrice();
 			}
@@ -206,11 +247,11 @@ public class Hotel implements Serializable{
 	}
 	
 	@OneToMany(mappedBy="hotel", cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	public Set<Room> getRooms() {
-		return rooms;
+	public Set<RoomType> getRoomTypes() {
+		return roomTypes;
 	}
-	public void setRooms(Set<Room> rooms) {
-		this.rooms = rooms;
+	public void setRoomTypes(Set<RoomType> rooms) {
+		this.roomTypes = rooms;
 	}
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -258,7 +299,7 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getRoomNumByType(int type){
 		int sum = 0;
-		for(Room room : rooms){
+		for(RoomType room : roomTypes){
 			if (room.getType() == type) {
 				sum ++;
 			}
@@ -269,7 +310,7 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getRoomCapacityByType(int type){
 		int capacity = 0;
-		for(Room room : rooms){
+		for(RoomType room : roomTypes){
 			if (room.getType() == type) {
 				capacity = room.getCapacity();
 				break;
@@ -278,7 +319,6 @@ public class Hotel implements Serializable{
 		return capacity;
 	}
 	
-
 	public Hotel(Hotel hotel){
 		this.city = hotel.getCity();
 		this.description = hotel.getDescription();
@@ -292,8 +332,7 @@ public class Hotel implements Serializable{
 		this.name = hotel.getName();
 		this.orders = hotel.getOrders();
 		this.register_date = hotel.getRegister_date();
-		this.rooms = hotel.getRooms();
-		this.roomVOs = hotel.getRoomVOs();
+		this.roomTypes = hotel.getRoomTypes();
 		this.star = hotel.getStar();
 		this.start_money = hotel.getStart_money();
 		this.state = hotel.getState();

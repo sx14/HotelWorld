@@ -1,35 +1,33 @@
 package service.impl;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
+
 import constant.ApplyState;
+import constant.UserRole;
 import dao.HotelDAO;
 import dao.HotelDraftDAO;
+import dao.RoomDAO;
 import model.Hotel;
 import model.HotelDraft;
 import model.Room;
+import model.RoomType;
+import model.RoomDraft;
 import service.HotelService;
-import vo.RoomVO;
 
 public class HotelServiceImpl implements HotelService{
 	private HotelDAO hotelDAO;
 	private HotelDraftDAO hotelDraftDAO;
+	private RoomDAO roomDAO;
 	
-	public HotelDraftDAO getHotelDraftDAO() {
-		return hotelDraftDAO;
-	}
+	
+	
 
-	public void setHotelDraftDAO(HotelDraftDAO hotelDraftDAO) {
-		this.hotelDraftDAO = hotelDraftDAO;
-	}
-
-	public HotelDAO getHotelDAO() {
-		return hotelDAO;
-	}
-
-	public void setHotelDAO(HotelDAO hotelDAO) {
-		this.hotelDAO = hotelDAO;
-	}
 
 	@Override
 	public List<Hotel> getHotels(String city) {
@@ -51,25 +49,39 @@ public class HotelServiceImpl implements HotelService{
 		}
 		return hotels;
 	}
+	
+	public boolean registerHotel(Hotel hotel){
+		return hotelDAO.saveOrUpdate(hotel);
+	}
 
 	@Override
-	public boolean registerOrUpdateHotel(Hotel hotel) {
-		Set<Room> rooms = new HashSet<>();
-		for(RoomVO roomVO : hotel.getRoomVOs()){
-			int num = roomVO.getNum();
-			int capacity = roomVO.getCapacity();
-			int type = roomVO.getType();
-			for(int i = 0 ; i < num ; i++){//根据注册时的房间数量，给每个房间建立一条记录
-				Room room = new Room();
-				room.setRid(i+1);
-				room.setCapacity(capacity);
-				room.setHotel(hotel);
-				room.setType(type);
-				rooms.add(room);
+	public boolean updateHotelDraft(Hotel hotel) {
+		String roomPath = "img/room";
+		HotelDraft hotelDraft = new HotelDraft(hotel);
+		Set<RoomDraft> roomDrafts = new HashSet<>();
+		for(RoomType roomType : hotel.getRoomTypes()){
+			if (roomType.getImg() != null) {
+				String storePath = ServletActionContext.getServletContext().getRealPath("/"+roomPath);
+				roomType.setImgFileName(hotel.getHid()+roomType.getImgFileName());
+				File img = new File(new File(storePath),roomType.getImgFileName());
+				if (!img.getParentFile().exists()) {
+					img.getParentFile().mkdirs();
+				}
+				try {
+					FileUtils.copyFile(roomType.getImg(), img);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				roomType.setImage(roomPath+"/"+roomType.getImgFileName());
 			}
+
+			roomType.setHotel(hotel);
+			RoomDraft roomDraft = new RoomDraft(roomType);
+			roomDraft.setHotelDraft(hotelDraft);
+			roomDrafts.add(roomDraft);
 		}
-		hotel.setRooms(rooms);
-		return  hotelDAO.saveOrUpdate(hotel);
+		hotelDraft.setRoomDrafts(roomDrafts);
+		return  hotelDraftDAO.save(hotelDraft);
 	}
 
 	@Override
@@ -84,37 +96,67 @@ public class HotelServiceImpl implements HotelService{
 
 	@Override
 	public boolean approveNewHotel(Hotel hotel) {
+		Set<RoomType> roomTypes = hotel.getRoomTypes();
+		for(RoomType roomType : roomTypes){
+			Set<Room> rooms = new HashSet<>();
+			for(int i = 0 ; i < roomType.getNum() ; i++){
+				Room room = new Room();
+//				room.setTid(roomType.getTid());
+				room.setRoomType(roomType);
+				room.setNum(i+1);
+				rooms.add(room);
+			}
+			roomType.setRooms(rooms);
+		}
+		hotel.setRoomTypes(roomTypes);
+		hotel.getUser().setRole(UserRole.OWNER.getValue());
 		hotel.setState(ApplyState.PASS.getValue());
-		return hotelDAO.saveOrUpdate(hotel);
+		boolean hotelResult =  hotelDAO.saveOrUpdate(hotel);
+		if (hotelResult == true) {
+			return true;
+		}else {
+			return false;
+		}
+		
 	}
 
 	@Override
-	public Hotel getHotel(int uid) {
-		List<Hotel> hotels = hotelDAO.get(uid);
+	public Hotel getHotelByUid(int uid) {
+		List<Hotel> hotels = hotelDAO.getByUid(uid);
 		if (hotels != null && hotels.size() != 0) {
 			return hotels.get(0);
 		}
 		return null;
 	}
 	
+	public HotelDraftDAO getHotelDraftDAO() {
+		return hotelDraftDAO;
+	}
+
+	public void setHotelDraftDAO(HotelDraftDAO hotelDraftDAO) {
+		this.hotelDraftDAO = hotelDraftDAO;
+	}
+
+	public HotelDAO getHotelDAO() {
+		return hotelDAO;
+	}
+
+	public void setHotelDAO(HotelDAO hotelDAO) {
+		this.hotelDAO = hotelDAO;
+	}
+
+	@Override
+	public boolean approveUpdateHotel(Hotel hotel) {
+		return false;
+	}
+
+	public RoomDAO getRoomDAO() {
+		return roomDAO;
+	}
+
+	public void setRoomDAO(RoomDAO roomDAO) {
+		this.roomDAO = roomDAO;
+	}
 	
-//	private void temp(){
-//		List<HotelDraft> hotelDrafts =  hotelDraftDAO.get(ApplyState.WAIT);
-//		List<Hotel> hotels = new ArrayList<>();
-//		for(HotelDraft hotelDraft : hotelDrafts){
-//			Hotel hotel = new Hotel();
-//			hotel.setCity(hotelDraft.getCity());
-//			hotel.setDescription(hotelDraft.getDescription());
-//			hotel.setEmail(hotelDraft.getEmail());
-//			hotel.setHid(hotelDraft.getHid());
-//			hotel.setHotel_name(hotelDraft.getHotel_name());
-//			hotel.setId_num(hotelDraft.getId_num());
-//			hotel.setName(hotelDraft.getName());
-//			hotel.setRegister_date(hotelDraft.getRegister_date());
-//			hotel.setStar(hotelDraft.getStar());
-//			hotel.setStart_money(hotelDraft.getStart_money());
-//			hotel.setState(hotelDraft.getState());
-//			hotel.setUser(hotelDraft.getUser());
-//		}
-//	}
+	
 }

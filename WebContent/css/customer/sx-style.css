@@ -85,13 +85,6 @@ body{
     margin-right: 50px !important;
 }
 
-/*label{*/
-    /*margin-right: 3px;*/
-/*}*/
-
-/*select{*/
-    /*width: 150px !important;*/
-/*}*/
 
 .row{
     margin-right: 0!important;
@@ -280,6 +273,14 @@ a:hover{
 
 .sx-label{
     padding-top: 10px;
+}
+
+.sx-remove-padding{
+    padding:0 !important;
+}
+
+.sx-add-padding{
+    padding: 15px;
 }
 
 

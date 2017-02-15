@@ -1,10 +1,11 @@
-<%@page import="vo.RoomVO"%>
+
 <%@page import="model.Customer"%>
 <%@page import="constant.OrderState"%>
 <%@page import="model.User"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Order" %>
 <%@page import="model.Hotel" %>
+<%@page import="model.RoomType" %>
 <%@page import="model.Room" %>
 <%
     String path = request.getContextPath();
@@ -106,10 +107,10 @@
             		out.println("</div>");
             		out.println("<div class=\"row\">");
             		out.println("<div class=\"col-md-8 sx-vertical-line sx-content-center\">");
-            		for(RoomVO roomVO : myHotel.getRoomVOs()){
+            		for(RoomType room : myHotel.getRoomTypes()){
             			out.println("<div class=\"row\">");
                 		out.println("<div class=\"col-md-8\">");
-                		out.println("<label class=\"sx-label\">房型"+roomVO.getType()+"(容量"+roomVO.getCapacity()+"人) 共"+roomVO.getNum()+"间</label>");
+                		out.println("<label class=\"sx-label\">房型"+room.getType()+"(容量"+room.getCapacity()+"人) 共"+room.getNum()+"间</label>");
                 		out.println("</div>");
                 		out.println("<div class=\"col-md-4\">");
                 		out.println("<p><label class=\"sx-big-red\">"+myHotel.getOrders().size()+"</label>次入住</p>");
@@ -127,17 +128,6 @@
             	}
             %>
 
-                                    
-                                
-                     
-                        
-                        
-                            
-                           
-                            
-                        
-                    
-                
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <strong>我的订单</strong>
@@ -206,7 +196,7 @@
                         %>
                         
                         <%
-                        	if(user.getName() != null){
+                        	if(user.getVisa() != null){
                         		out.println("<label><span class=\"label label-success\">认证会员</span>"+user.getHiddenName()+"</label>");
                         		out.println("<p><a class=\"btn btn-default sx-big-button\" role=\"button\" href=\"register_vip.jsp\">修改个人信息</a></p>");
                         	}else{
@@ -226,7 +216,7 @@
                             <hr>
 							<%
 								if(user.getVisa() != null){
-									out.println("<h2 class=\"sx-content-center\"><strong>￥"+user.getVisa().getMoney()+"</strong></h2>");
+									out.println("<h2 class=\"sx-content-center\"><strong>￥"+user.getMoney()+"</strong></h2>");
 								}else{
 									out.println("<h2 class=\"sx-content-center\"><strong>尚未注册会员</strong></h2>");
 								}
@@ -361,19 +351,19 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4>充值</h4>
             </div>
-            <form>
+            <form action="chargeVIP" method="post">
             <div class="modal-body">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label class="col-md-3 control-label">金额</label>
                         <div class="col-md-8">
-                            <input type="number" class="form-control" placeholder="充值金额">
+                            <input name="chargeMoney" type="number" class="form-control" placeholder="充值金额">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 control-label">密码</label>
                         <div class="col-md-8">
-                            <input type="number" class="form-control" placeholder="6位支付密码">
+                            <input name="password" type="password" class="form-control" placeholder="6位支付密码">
                         </div>
                     </div>
                 </div>

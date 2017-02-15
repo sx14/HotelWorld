@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,13 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name="hotel_draft")
 public class HotelDraft {
+	private int hdid;
 	private int hid;
-//	private int uid;
 	private String city;
 	private double start_money;
 	private Date register_date;
@@ -32,7 +32,27 @@ public class HotelDraft {
 	private String id_num;
 	private String email;
 	private int state;
+	private Set<RoomDraft> roomDrafts;
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public int getHdid() {
+		return hdid;
+	}
+
+	public void setHdid(int hdid) {
+		this.hdid = hdid;
+	}
+
+	@OneToMany(mappedBy="hotelDraft",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	public Set<RoomDraft> getRoomDrafts() {
+		return roomDrafts;
+	}
+
+	public void setRoomDrafts(Set<RoomDraft> roomDrafts) {
+		this.roomDrafts = roomDrafts;
+	}
+
 	public int getState() {
 		return state;
 	}
@@ -116,7 +136,7 @@ public class HotelDraft {
 	}
 
 	
-	@OneToOne(cascade=CascadeType.ALL)//立即加载
+	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)//立即加载
 	@JoinColumn(name="uid")
 	public User getUser() {
 		return user;
@@ -124,8 +144,7 @@ public class HotelDraft {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+
 	public int getHid() {
 		return hid;
 	}
@@ -150,4 +169,25 @@ public class HotelDraft {
 	public void setRegister_date(Date register_date) {
 		this.register_date = register_date;
 	}	
+	
+	public HotelDraft(Hotel hotel){
+		//this.roomDrafts没设置
+		this.city = hotel.getCity();
+		this.description = hotel.getDescription();
+		this.email = hotel.getEmail();
+		this.hid = hotel.getHid();
+		this.hotel_name = hotel.getHotel_name();
+		this.id_num = hotel.getId_num();
+		this.image_big = hotel.getImage_big();
+		this.image_mid = hotel.getImage_mid();
+		this.image_small = hotel.getImage_small();
+		this.name = hotel.getName();
+		this.register_date = hotel.getRegister_date();
+		this.star = hotel.getStar();
+		this.start_money = hotel.getStart_money();
+		this.state = hotel.getState();
+		this.user = hotel.getUser();
+	}
+	
+	public HotelDraft(){}
 }

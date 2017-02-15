@@ -3,15 +3,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="customer",schema="hotel_world")
 public class Customer {
 	private int cid;
-	private int oid;
+	private Order order;
+
 	private String name;
 	private String id_num;
+	
+	@ManyToOne
+	@JoinColumn(name="oid")
+	public Order getOrder() {
+		return order;
+	}
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -21,12 +33,12 @@ public class Customer {
 	public void setCid(int cid) {
 		this.cid = cid;
 	}
-	public int getOid() {
-		return oid;
-	}
-	public void setOid(int oid) {
-		this.oid = oid;
-	}
+//	public int getOid() {
+//		return oid;
+//	}
+//	public void setOid(int oid) {
+//		this.oid = oid;
+//	}
 	public String getName() {
 		return name;
 	}

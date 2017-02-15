@@ -1,48 +1,43 @@
 package action;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.persistence.criteria.CriteriaBuilder.In;
-
 import java.util.Set;
 
-import com.opensymphony.xwork2.Action;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-
 import constant.City;
 import constant.Config;
-import constant.UserRole;
 import model.Hotel;
 import model.HotelDraft;
 import model.Order;
-import model.Room;
+import model.RoomType;
 import model.User;
 import service.HotelService;
 import service.OrderService;
+import service.RoomService;
 import service.UserService;
-import vo.RoomVO;
 
 public class HotelAction extends ActionSupport{
 	private static final long serialVersionUID = -5785352294133817532L;
 	private HotelService hotelService;
-	private UserService userService;
 	private OrderService orderService;
-	private String inDate;
-	private String outDate;
+	private RoomService roomService;
+	private Date inDate;
+	private Date outDate;
 	private String expectedCity;
 	private Hotel hotel;
-	private RoomVO room1;
-	private RoomVO room2;
-	private RoomVO room3;
+	private RoomType room1;//用于注册
+	private RoomType room2;//用于注册
+	private RoomType room3;//用于注册
+	
+	private int hid;//用于显示酒店详细
 	
 
 	
@@ -51,7 +46,7 @@ public class HotelAction extends ActionSupport{
 		Hotel myHotel = (Hotel)session.get("myHotel");
 		if (myHotel == null) {
 			User user = (User)session.get("user");
-			myHotel = getHotelDetail(user.getUid());
+			myHotel = hotelService.getHotelByUid(user.getUid());
 			session.put("myHotel", hotel);
 		}
 		return SUCCESS;
@@ -69,44 +64,13 @@ public class HotelAction extends ActionSupport{
 				consumeSum += order.getVip_price();
 			}
 		}
-		Hotel myHotel = getHotelDetail(user.getUid());
+		Hotel myHotel = hotelService.getHotelByUid(user.getUid());
 		Map request = (Map) ActionContext.getContext().get("request");
 		request.put("orders", orders);
 		request.put("consumeSum", consumeSum);
 		session.put("myHotel",myHotel);
 		return SUCCESS;
 	}
-	
-	private Hotel getHotelDetail(int uid){//room
-		Hotel hotel = hotelService.getHotel(uid);
-		Set<Room> rooms = hotel.getRooms();
-		if(rooms != null){
-			Map<Integer,RoomVO> roomCounter = new HashMap<>();
-			for(Room room :rooms){
-				RoomVO info = roomCounter.get(room.getType());
-				if (info == null) {
-					info = new RoomVO();
-					info.setType(room.getType());
-					info.setImage(room.getImage());
-					info.setNum(0);
-					info.setCapacity(room.getCapacity());
-					info.setPrice(room.getPrice());
-					info.setVip_price(room.getVip_price());
-					roomCounter.put(room.getType(), info);
-				}
-				int count = info.getNum();
-				count++;
-				info.setNum(count);
-				roomCounter.replace(room.getType(), info);
-			}
-			List<RoomVO> roomVOs = new ArrayList<>(roomCounter.values());
-			hotel.setRoomVOs(roomVOs);
-			
-		}
-		return hotel;
-	}
-
-
 
 	private Hotel handleHotel(Hotel hotel){
 		Hotel hotel1 = new Hotel();
@@ -122,47 +86,56 @@ public class HotelAction extends ActionSupport{
 		return hotel1;
 	}
 	
-	public String updateHotel(){//room
-		List<RoomVO> roomVOs = new ArrayList<>();
+	public String updateHotel(){
+		Set<RoomType> rooms = new HashSet<>();
+		if (room1 != null) {
+			rooms.add(room1);
+		}
+		if(room2 != null){
+			rooms.add(room2);
+		}
+		if(room3 != null){
+			rooms.add(room3);
+		}
+		hotel.setRoomTypes(rooms);
+		Hotel h = new Hotel(hotel);
+		Map session = ActionContext.getContext().getSession();
+		User user = (User)session.get("user");
+		h.setUser(user);
+		boolean result = hotelService.updateHotelDraft(h);
+		if (result == true) {
+			return SUCCESS;
+		}
+		return ERROR;
+	}
+
+	public String registerHotel(){
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		User user = (User) session.get("user");
+		Hotel hotel1 = handleHotel(hotel);
+		hotel1.setUser(user);
+		Set<RoomType> rooms = new HashSet<>();
 		room1.setType(1);
 		room2.setType(2);
 		room3.setType(3);
-		roomVOs.add(room1);
-		roomVOs.add(room2);
-		roomVOs.add(room3);
-		hotel.setRoomVOs(roomVOs);
-		Boolean result = hotelService.registerOrUpdateHotel(hotel);
+		room1.setHotel(hotel1);
+		room2.setHotel(hotel1);
+		room3.setHotel(hotel1);
+		rooms.add(room1);
+		rooms.add(room2);
+		rooms.add(room3);
+		hotel1.setRoomTypes(rooms);
+		boolean result = hotelService.registerHotel(hotel1);
+		System.out.println("register hotel :" + result);
 		if (result == true) {
 			return SUCCESS;
 		}else {
 			return ERROR;
 		}
 	}
-
-	public String registerHotel(){//room
-		Map<String, Object> session = ActionContext.getContext().getSession();
-		User user = (User) session.get("user");
-		user.setRole(UserRole.OWNER.getValue());
-		Hotel hotel1 = handleHotel(hotel);
-		hotel1.setUser(user);
-		List<RoomVO> roomVOs = new ArrayList<>();
-		room1.setType(1);
-		room2.setType(2);
-		room3.setType(3);
-		roomVOs.add(room1);
-		roomVOs.add(room2);
-		roomVOs.add(room3);
-		hotel1.setRoomVOs(roomVOs);
-		boolean result = hotelService.registerOrUpdateHotel(hotel1);
-		boolean userUpdateResult = userService.saveOrUpdate(user);
-		System.out.println("register hotel :" + result);
-		if (result == true && userUpdateResult) {
-			return SUCCESS;
-		}else {
-			return ERROR;
-		}
-	}
 	
+
+
 	public String approveNewHotel(){
 		Map session = ActionContext.getContext().getSession();
 		List<Hotel> hotels = (List<Hotel>) session.get("newHotels");
@@ -204,17 +177,10 @@ public class HotelAction extends ActionSupport{
 
 	public String chooseHotel(){
 		Date in,out;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date today = Calendar.getInstance().getTime();
 		if (inDate != null && outDate != null) {
-			try {
-				in = format.parse(inDate);
-				out = format.parse(outDate);
-			} catch (ParseException e) {
-				in = today;
-				out = today;
-				e.printStackTrace();
-			}
+			in = inDate;
+			out = outDate;
 			if (in.after(out)) {
 				in = today;
 				out = today;
@@ -240,42 +206,13 @@ public class HotelAction extends ActionSupport{
 			return ERROR;
 		}
 	}
-	
-	public UserService getUserService() {
-		return userService;
-	}
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
 
 	public Hotel getMyHotel(int uid){
-		return hotelService.getHotel(uid);
+		return hotelService.getHotelByUid(uid);
 	}
 
-	public RoomVO getRoom1() {
-		return room1;
-	}
 
-	public void setRoom1(RoomVO room1) {
-		this.room1 = room1;
-	}
-
-	public RoomVO getRoom2() {
-		return room2;
-	}
-
-	public void setRoom2(RoomVO room2) {
-		this.room2 = room2;
-	}
-
-	public RoomVO getRoom3() {
-		return room3;
-	}
-
-	public void setRoom3(RoomVO room3) {
-		this.room3 = room3;
-	}
 
 	public HotelService getHotelService() {
 		return hotelService;
@@ -283,22 +220,6 @@ public class HotelAction extends ActionSupport{
 
 	public void setHotelService(HotelService hotelService) {
 		this.hotelService = hotelService;
-	}
-
-	public String getInDate() {
-		return inDate;
-	}
-
-	public void setInDate(String inDate) {
-		this.inDate = inDate;
-	}
-
-	public String getOutDate() {
-		return outDate;
-	}
-
-	public void setOutDate(String outDate) {
-		this.outDate = outDate;
 	}
 
 	public String getExpectedCity() {
@@ -309,6 +230,13 @@ public class HotelAction extends ActionSupport{
 		this.expectedCity = expectedCity;
 	}
 	
+	public int getHid() {
+		return hid;
+	}
+
+	public void setHid(int hid) {
+		this.hid = hid;
+	}
 	
 	public Hotel getHotel() {
 		return hotel;
@@ -318,11 +246,61 @@ public class HotelAction extends ActionSupport{
 		this.hotel = hotel;
 	}
 	
-	public OrderService getOrderService() {
+	public OrderService getOrderService(){
 		return orderService;
 	}
 
 	public void setOrderService(OrderService orderService) {
 		this.orderService = orderService;
 	}
+	
+	public RoomType getRoom1() {
+		return room1;
+	}
+
+	public void setRoom1(RoomType room1) {
+		this.room1 = room1;
+	}
+
+	public RoomType getRoom2() {
+		return room2;
+	}
+
+	public void setRoom2(RoomType room2) {
+		this.room2 = room2;
+	}
+
+	public RoomType getRoom3() {
+		return room3;
+	}
+
+	public void setRoom3(RoomType room3) {
+		this.room3 = room3;
+	}
+
+	public Date getInDate() {
+		return inDate;
+	}
+
+	public void setInDate(Date inDate) {
+		this.inDate = inDate;
+	}
+
+	public Date getOutDate() {
+		return outDate;
+	}
+
+	public void setOutDate(Date outDate) {
+		this.outDate = outDate;
+	}
+
+	public RoomService getRoomService() {
+		return roomService;
+	}
+
+	public void setRoomService(RoomService roomService) {
+		this.roomService = roomService;
+	}
+	
+	
 }

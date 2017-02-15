@@ -4,13 +4,15 @@ import java.util.List;
 
 import model.Hotel;
 import model.HotelDraft;
-import vo.RoomVO;
 
 public interface HotelService {
 	public List<Hotel> getHotels(String city);
-	public boolean registerOrUpdateHotel(Hotel hotel);
+	public boolean updateHotelDraft(Hotel hotel);
 	public List<Hotel> getNewHotels();
 	public List<HotelDraft> getModifyHotels();
 	public boolean approveNewHotel(Hotel hotel);
-	public Hotel getHotel(int uid);
+	public boolean approveUpdateHotel(Hotel hotel);
+	public Hotel getHotelByUid(int uid);
+	public boolean registerHotel(Hotel hotel);
 }
+

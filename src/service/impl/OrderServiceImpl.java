@@ -10,7 +10,7 @@ public class OrderServiceImpl implements OrderService {
 	private OrderDAO orderDAO;
 	@Override
 	public List<Order> getOrder(int uid) {
-		return orderDAO.get(uid);
+		return orderDAO.getByUser(uid);
 	}
 	public OrderDAO getOrderDAO() {
 		return orderDAO;

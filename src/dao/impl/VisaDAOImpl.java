@@ -1,11 +1,8 @@
 package dao.impl;
 
-import javax.persistence.Transient;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import dao.VisaDAO;
 import model.Visa;
 
@@ -13,7 +10,7 @@ public class VisaDAOImpl implements VisaDAO{
 	private SessionFactory SessionFactory;
 	@Override
 	public Visa get(String vid) {
-		return new Visa("孙旭",100.0);
+		return new Visa("孙旭",100);
 	}
 	public SessionFactory getSessionFactory() {
 		return SessionFactory;

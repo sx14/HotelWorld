@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 
 import com.sun.swing.internal.plaf.metal.resources.metal_zh_TW;
 
+import constant.Config;
 import constant.UserRole;
 
 @Entity
@@ -32,11 +33,18 @@ public class User {
 	private Visa visa;
 	private Date register_date;
 	private Date last_charge_date;
-//	private Set<Order> orders;
-//	private Hotel hotel;
+	private Set<Order> orders;
 	private String image;
 	private int role;
 	private int money;
+	
+	@Transient
+	public int getCommentNum(){
+		if (orders != null) {
+			return orders.size();
+		}
+		return 0;
+	}
 	
 
 	public int getMoney() {
@@ -63,13 +71,13 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-//	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
-//	public Set<Order> getOrders() {
-//		return orders;
-//	}
-//	public void setOrders(Set<Order> orders) {
-//		this.orders = orders;
-//	}
+	@OneToMany(mappedBy="user",fetch=FetchType.LAZY)
+	public Set<Order> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
 	
 //	@OneToOne(mappedBy="user",fetch=FetchType.LAZY)//从表
 ////	@JoinColumn(name="uid")
@@ -140,6 +148,7 @@ public class User {
 	
 	public User(){
 		this.role = UserRole.USER.getValue();
+		this.password = Config.DEFAULT_PASSWORD;
 	}
 	
 	@Transient

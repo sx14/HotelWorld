@@ -12,6 +12,7 @@ import org.hibernate.query.Query;
 import constant.ApplyState;
 import dao.HotelDAO;
 import dao.HotelDraftDAO;
+import model.Hotel;
 import model.HotelDraft;
 
 public class HotelDraftDAOImpl implements HotelDraftDAO{
@@ -27,11 +28,20 @@ public class HotelDraftDAOImpl implements HotelDraftDAO{
 		session.close();
 		return hotelDrafts;
 	}
+	@Override
+	public boolean save(HotelDraft hotel) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		session.saveOrUpdate(hotel);
+		transaction.commit();
+		session.close();
+		return true;
+	}
+	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
 }

@@ -160,9 +160,9 @@
 			if(i == (top-1)){out.print("sx-star-block-right");}
 			out.println("\">");
 			out.println("<img class=\"img-responsive sx-img-star-hotel\" src=\""+hotel.getImage_mid()+"\" alt=\"Generic placeholder image\">");
-			out.println("<p><a class=\"sx-big-blue\" href=\"#\">"+hotel.getName()+"</a></p>");
-			out.println("<p>销量遥遥领先，好评如潮，平均得分"+hotel.getAvgStar()+"</p>");
-			out.println("<p><a class=\"btn btn-default\" href=\"#\" role=\"button\">进店瞧瞧 &raquo;</a></p>");
+			out.println("<p><a class=\"sx-big-blue\" href=\"chooseRoom?hid="+hotel.getHid()+"\">"+hotel.getName()+"</a></p>");
+			out.println("<p>"+hotel.getDescription()+"</p>");
+			out.println("<p><a class=\"btn btn-default\" href=\"chooseRoom?hid="+hotel.getHid()+"\" role=\"button\">进店瞧瞧 &raquo;</a></p>");
 			out.println("</div>");
 		}
       %>	
@@ -190,7 +190,7 @@
       		out.println("<tr>");
       		out.println("<td class=\"media sx-media\">");
       		out.println("<div class=\"media-left\">");
-      		out.println("<a href=\"#\">");
+      		out.println("<a href=\"chooseRoom?hid="+hotel.getHid()+"\">");
       		out.println("<img class=\"media-object sx-img-long\" src=\""+hotel.getImage_small()+"\" alt=\"...\">");
       		out.println("</a>");
       		out.println("</div>");
@@ -198,9 +198,9 @@
       		out.println("<div class=\"media-body\">");
       		out.println("<div class=\"row\">");
       		out.println("<div class=\"col-md-6 sx-vertical-line\">");
-      		out.println("<h4 class=\"media-heading\"><span class=\"label sx-label-hotel\">1</span><a>"+hotel.getName()+"</a><span class=\"label label-danger\">"+hotel.getStar()+"星级</span></h4>");
+      		out.println("<h4 class=\"media-heading\"><span class=\"label sx-label-hotel\">1</span><a href=\"chooseRoom?"+hotel.getHid()+"\">"+hotel.getName()+"</a><span class=\"label label-danger\">"+hotel.getStar()+"星级</span></h4>");
       		out.println("<p>"+hotel.getDescription()+"</p>");
-      		out.println("<p class=\"sx-small-grey\">“贼拉过瘾，相当舒服了”</p>");
+      		out.println("<p class=\"sx-small-grey\">“"+hotel.getGoodComment()+"”</p>");
       		out.println("</div>");
       		out.println("<div class=\"col-md-3 sx-vertical-line sx-content-center\">");
       		out.println("<p><span class=\"sx-big-blue\">"+hotel.getAvgStar()+"</span>/5分</p>");
@@ -209,7 +209,7 @@
       		out.println("</div>");
       		out.println("<div class=\"col-md-3 sx-content-center\">");
       		out.println("<p>￥<span class=\"sx-big-red\">"+hotel.getLowestPrice()+"</span>起</p>");
-      		out.println("<p><button class=\"btn btn-primary\">进店看看</button></p>");
+      		out.println("<p><a class=\"btn btn-primary\" href=\"chooseRoom?hid="+hotel.getHid()+"\">进店看看</a></p>");
       		out.println("</div>");
       		out.println("</div>");
       		out.println("</div>");

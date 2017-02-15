@@ -16,7 +16,7 @@
 		<action name="login" class="action.UserAction" method="login">
 			<result name="USER" type="redirect">chooseHotel</result>
 			<result name="MANAGER" type="redirect">manageNewHotel</result>
-			<result name="STAFF" type="redirect">manageRoom</result>
+			<result name="OWNER" type="redirect">manageRoom</result>
 		</action>
 		
 		<action name="chooseHotel" class="action.HotelAction" method="chooseHotel">
@@ -57,6 +57,22 @@
 		
 		<action name="updateHotel" class="action.HotelAction" method="updateHotel">
 			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="chargeVIP" class="action.UserAction" method="chargeVIP">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="manageRoom" class="action.RoomAction" method="manageRoom">
+			<result name="success">manage_room.jsp</result>
+		</action>
+		
+		<action name="handleOrder" class="action.RoomAction" method="handleOrder">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="chooseRoom" class="action.RoomAction" method="chooseRoom">
+			<result name="success">choose_room.jsp</result>
 		</action>
 		
 	</package>

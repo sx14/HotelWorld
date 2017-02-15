@@ -1,53 +1,73 @@
 package model;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
+import constant.OrderState;
 
 @Entity
-@Table(name="room",schema="hotel_world")
+@Table(name="room")
 public class Room {
+//	private int tid;
 	private int rid;
-	private int capacity;
-	private int price;
-	private int vip_price;
-	private String image;
-	private Hotel hotel;
-	private int type;
+	private int num;
+	private RoomType roomType;
+	private Set<Order> orders;
 	
-	
-	public int getType() {
-		return type;
+	@Transient
+	public Order getOrder(){
+		Order o = null;
+		for(Order order : orders){
+			o =  order;
+			break;
+		}
+		return o;
 	}
 
-	public void setType(int type) {
-		this.type = type;
+	@Transient
+	public String getState(){
+		String state = "空闲";
+		if (orders != null) {
+			for(Order order : orders){
+				state = OrderState.getOrderStateInChinese(order.getState());
+				break;
+			}
+		}
+		return state;
 	}
+	
+	@Transient
+	public String getRoomName(){
+		return String.format("%04d", num);
+	}
+	
 
+	@OneToMany(mappedBy="room",fetch=FetchType.EAGER)
+	public Set<Order> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
+	
 	@ManyToOne
-	@JoinColumn(name="hid")
-	public Hotel getHotel() {
-		return hotel;
+	@JoinColumn(name="tid")
+	public RoomType getRoomType() {
+		return roomType;
 	}
-
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
+	public void setRoomType(RoomType roomType) {
+		this.roomType = roomType;
 	}
 	
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public int getRid() {
@@ -56,46 +76,12 @@ public class Room {
 	public void setRid(int rid) {
 		this.rid = rid;
 	}
-
-	public int getCapacity() {
-		return capacity;
-	}
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	public int getVip_price() {
-		return vip_price;
-	}
-	public void setVip_price(int vip_price) {
-		this.vip_price = vip_price;
-	}
 	
-	@Transient
-	public String getRoomType(){
-		String type = "人间";
-		switch (capacity) {
-		case 1:
-			type = "单"+type;
-			break;
-		case 2:
-			type = "双"+type;
-			break;
-		default:
-			type = capacity + type;
-			break;
-		}
-		return type;
+	public int getNum() {
+		return num;
 	}
-	
-	@Transient
-	public String getRoomName(){
-		return String.format("%04d", rid);
+	public void setNum(int num) {
+		this.num = num;
 	}
 	
 }

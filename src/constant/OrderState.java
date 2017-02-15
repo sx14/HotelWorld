@@ -11,4 +11,19 @@ public enum OrderState {
 	public int getValue(){
 		return value;
 	}
+	
+	public static String getOrderStateInChinese(int value){
+		String state;
+		switch (value) {
+		case 0:
+			state = "已预订";
+			break;
+		case 1:
+			state = "已入住";
+			break;
+		default:
+			state = "空闲";
+		}
+		return state;
+	}
 }
