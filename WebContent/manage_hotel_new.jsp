@@ -21,7 +21,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Theme Template for Bootstrap</title>
+    <title>Hotel World 酒店管理</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -44,38 +44,38 @@
 <body class="sx-background">
 
 <!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Bootstrap theme</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a class="navbar-brand" href="">HotelWorld</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav" style="float:right">
+		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
+		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="logout">退出登录</a></li>
+		                <li class="dropdown">
+		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		                    <ul class="dropdown-menu">
+		                        <li><a href="#">Action</a></li>
+		                        <li><a href="#">Another action</a></li>
+		                        <li><a href="#">Something else here</a></li>
+		                        <li role="separator" class="divider"></li>
+		                        <li class="dropdown-header">Nav header</li>
+		                        <li><a href="#">Separated link</a></li>
+		                        <li><a href="#">One more separated link</a></li>
+		                    </ul>
+		                </li>
+		            </ul>
+		        </div><!--/.nav-collapse -->
+		    </div>
+		</nav>
 
 <div class="container theme-showcase" role="main">
 
@@ -85,7 +85,7 @@
 
     <ul class="nav nav-tabs nav-justified">
         <li role="presentation" class="active"><a>新店注册</a></li>
-        <li role="presentation"><a>店铺修改</a></li>
+        <li role="presentation"><a href="manageModifyHotel">店铺修改</a></li>
         <li role="presentation"><a>经营统计</a></li>
     </ul>
     <div class="panel sx-panel">
@@ -118,16 +118,6 @@
                 	}
                 
                 %>
-                <tr>
-                    <th>2016-10-10</th>
-                    <td>南京啦啦啦店</td>
-                    <td>阿旭</td>
-                    <td>南京</td>
-                    <td><span class="label label-success">申请加盟</span></td>
-                    <td>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">查看详情</button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -141,7 +131,7 @@
 		out.println("<div id =\"div"+hotel.getHid()+"\" class=\"modal fade \" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\">");	
 		out.println("<div class=\"modal-dialog\" role=\"document\">");
 		out.println("<div class=\"modal-content\">");
-		out.println("<form id=\"form"+hotel.getHid()+"\" action=\"approveNewHotel\" method=\"post\">");
+		out.println("<form id=\"form"+hotel.getHid()+"\" action=\"handleNewHotel\" method=\"post\">");
 		out.println("<input name=\"hotel.state\" type=\"hidden\">");
 		out.println("<input name=\"hotel.hid\" type=\"hidden\" value=\""+hotel.getHid()+"\">");
 		out.println("<div class=\"modal-header\">");

@@ -23,7 +23,6 @@ public class RoomAction extends ActionSupport{
 
 	private int tid;
 	private int hid;
-	private int num;//房间个数
 	
 	public String reserveRoom(){
 		Map session = ActionContext.getContext().getSession();
@@ -33,9 +32,6 @@ public class RoomAction extends ActionSupport{
 		}else {
 			inDate = (Date) session.get("inDate");
 			outDate = (Date) session.get("outDate");
-			if (num == 0) {
-				num = 1;
-			}
 			RoomType roomType = null;
 			for(RoomType type : hotel.getRoomTypes()){
 				if (type.getTid() == tid) {
@@ -43,18 +39,16 @@ public class RoomAction extends ActionSupport{
 					break;
 				}
 			}
-			List<Room> rooms = roomType.getEmptyRooms(num);
- 			ArrayList<Order> orders = new ArrayList<>();
+			List<Room> rooms = roomType.getEmptyRooms(1);
 			User user = (User) session.get("user");
-			for(int i = 0 ; i < rooms.size() ; i++){
-				orders.add(createOrder(user, i, inDate, outDate,rooms.get(i)));
-			}
-			session.put("orders", orders);
+			Order order = createOrder(user, inDate, outDate,rooms.get(0));
+			session.put("order", order);
+			session.put("customerNum", roomType.getCapacity());
 		}
 		return SUCCESS;
 	}
 	
-	private Order createOrder(User user,int rid,Date inDate ,Date outDate,Room room){
+	private Order createOrder(User user,Date inDate ,Date outDate,Room room){
 		Order order = new Order();
 		Date today = Calendar.getInstance().getTime();
 		RoomType roomType = room.getRoomType();
@@ -103,6 +97,8 @@ public class RoomAction extends ActionSupport{
 		}
 		Hotel hotel = roomService.getRoomByHid(hid, inDate, outDate);
 		if (hotel != null) {
+			session.put("inDate", inDate);
+			session.put("outDate", outDate);
 			session.put("hotel", hotel);
 			return SUCCESS;
 		}

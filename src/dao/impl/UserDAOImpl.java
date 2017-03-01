@@ -14,7 +14,7 @@ public class UserDAOImpl implements UserDAO{
 	public boolean saveOrUpdate(User user) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.saveOrUpdate(user);
+		session.saveOrUpdate(session.merge(user));
 		transaction.commit();
 		session.close();
 		return true;

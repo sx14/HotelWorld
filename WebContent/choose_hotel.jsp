@@ -1,3 +1,4 @@
+<%@page import="constant.HotelStar"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="constant.City"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
@@ -36,26 +37,38 @@
   <body>
     <div>
       <div class="container">
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Hotel World</a>
-            </div>
-            <div id="navbar1" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav" style="float:right">
-                <li class="active"><a href="chooseHotel">主页</a></li>
-                <li><a href="personalHome">我的Hotel</a></li>
-                <li><a href="#contact">退出登录</a></li>
-              </ul>
-            </div><!--/.nav-collapse -->
-          </div>
-        </nav>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a class="navbar-brand" href="">HotelWorld</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav" style="float:right">
+		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
+		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="logout">退出登录</a></li>
+		                <li class="dropdown">
+		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		                    <ul class="dropdown-menu">
+		                        <li><a href="#">Action</a></li>
+		                        <li><a href="#">Another action</a></li>
+		                        <li><a href="#">Something else here</a></li>
+		                        <li role="separator" class="divider"></li>
+		                        <li class="dropdown-header">Nav header</li>
+		                        <li><a href="#">Separated link</a></li>
+		                        <li><a href="#">One more separated link</a></li>
+		                    </ul>
+		                </li>
+		            </ul>
+		        </div><!--/.nav-collapse -->
+		    </div>
+		</nav>
       </div>
     </div>
 
@@ -110,22 +123,28 @@
           <%
           	String expectedCity = (String)session.getAttribute("expectedCity");
           	for(City city : (City[])request.getAttribute("cities")){
-          		if(expectedCity.equals(city.getValue())){
-	          		out.println("<option value=\""+city.getValue()+"\" selected>"+city.getValue()+"</option>");
-          		}else{
-          			out.println("<option value=\""+city.getValue()+"\">"+city.getValue()+"</option>");
-          		}
-          	}
-          %>
+          		if(expectedCity.equals(city.getValue())){%>
+          			<option value="<%=city.getValue() %>" selected><%=city.getValue() %></option>
+          		<%}else{%>
+          			<option value="<%=city.getValue() %>"><%=city.getValue() %></option>
+          		<%}
+          	}%>
+          
           </select>
         </div>
         <div class="form-group sx-search">
           <label>星级</label>
-          <select class="form-control" name="star">
-          	<option value="0" selected>不限</option>
-            <option value="1">A级（500￥起）</option>
-            <option value="2">B级（300￥起）</option>
-            <option value="3">C级（100￥起）</option>
+          <select class="form-control" name="level">
+          <%
+          	HotelStar[] levels = (HotelStar[])request.getAttribute("levels");
+          	int expectedLevel = (Integer)session.getAttribute("expectedLevel");
+          	for(int i = 0 ; i < levels.length ; i++){
+          		if(levels[i].getValue() == expectedLevel){%>
+          			<option value="<%=levels[i].getValue() %>" selected><%=levels[i].getName()+levels[i].getLowestPriceDesc() %></option>
+          		<%}else{%>
+          			<option value="<%=levels[i].getValue() %>"><%=levels[i].getName()+levels[i].getLowestPriceDesc() %></option>
+          		<%}
+          	}%>
           </select>
         </div>
         <div class="form-group sx-search">
@@ -166,7 +185,7 @@
 			if(i == (top-1)){out.print("sx-star-block-right");}
 			out.println("\">");
 			out.println("<img class=\"img-responsive sx-img-star-hotel\" src=\""+hotel.getImage_mid()+"\" alt=\"Generic placeholder image\">");
-			out.println("<p><a class=\"sx-big-blue\" href=\"chooseRoom?hid="+hotel.getHid()+"\">"+hotel.getName()+"</a></p>");
+			out.println("<p><a class=\"sx-big-blue\" href=\"chooseRoom?hid="+hotel.getHid()+"\">"+hotel.getCity()+hotel.getHotel_name()+"</a></p>");
 			out.println("<p>"+hotel.getDescription()+"</p>");
 			out.println("<p><a class=\"btn btn-default\" href=\"chooseRoom?hid="+hotel.getHid()+"\" role=\"button\">进店瞧瞧 &raquo;</a></p>");
 			out.println("</div>");
@@ -191,12 +210,12 @@
       		out.println("<div class=\"media-body\">");
       		out.println("<div class=\"row\">");
       		out.println("<div class=\"col-md-6 sx-vertical-line\">");
-      		out.println("<h4 class=\"media-heading\"><span class=\"label sx-label-hotel\">1</span><a href=\"chooseRoom?"+hotel.getHid()+"\">"+hotel.getName()+"</a><span class=\"label label-danger\">"+hotel.getStar()+"星级</span></h4>");
+      		out.println("<h4 class=\"media-heading\"><span class=\"label sx-label-hotel\">"+(i+1)+"</span><a href=\"chooseRoom?hid="+hotel.getHid()+"\">"+hotel.getCity()+hotel.getHotel_name()+"</a><span class=\"label label-danger\">"+hotel.getLevel()+"</span></h4>");
       		out.println("<p>"+hotel.getDescription()+"</p>");
       		out.println("<p class=\"sx-small-grey\">“"+hotel.getGoodComment()+"”</p>");
       		out.println("</div>");
       		out.println("<div class=\"col-md-3 sx-vertical-line sx-content-center\">");
-      		out.println("<p><span class=\"sx-big-blue\">"+hotel.getAvgStar()+"</span>/5分</p>");
+      		out.println("<p><span class=\"sx-big-blue\">"+String.format("%.1f", hotel.getAvgStar())+"</span>/5分</p>");
       		out.println("<p>"+hotel.getCommentNum()+"次评价</p>");
       		out.println("<p class=\"sx-small-green\">"+hotel.getGoodCommentNum()+"条好评</p>");
       		out.println("</div>");
@@ -210,62 +229,6 @@
       		out.println("</tr>");
       	}
       %>
-        <tr>
-          <td class="media sx-media">
-            <div class="media-left">
-              <a href="#">
-                <img class="media-object sx-img-long" src="../img/hotel1.jpg" alt="...">
-              </a>
-            </div>
-            <div class="media-body">
-              <div class="row">
-                <div class="col-md-6 sx-vertical-line">
-                  <h4 class="media-heading"><span class="label sx-label-hotel">1</span><a>南京啦啦啦分店</a><span class="label label-danger">5星级</span></h4>
-                  <p>南京最好的酒店，啥都没有，要啥没啥，床都没有，就睡地板，价钱合适的很，绝对上档次的房间！欢迎入住！</p>
-                  <p class="sx-small-grey">“贼拉过瘾，相当舒服了”</p>
-                </div>
-                <div class="col-md-3 sx-vertical-line sx-content-center">
-                  <p><span class="sx-big-blue">4.9</span>/5分</p>
-                  <p>5000000人评价</p>
-                  <p class="sx-small-green">1条好评</p>
-                </div>
-                <div class="col-md-3 sx-content-center">
-                  <p>￥<span class="sx-big-red">500</span>起</p>
-                  <p><button class="btn btn-primary">进店看看</button></p>
-                </div>
-              </div>
-
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="media sx-media">
-            <div class="media-left">
-              <a href="#">
-                <img class="media-object sx-img-long" src="../img/hotel1.jpg" alt="...">
-              </a>
-            </div>
-            <div class="media-body">
-              <div class="row">
-                <div class="col-md-6 sx-vertical-line">
-                  <h4 class="media-heading"><span class="label sx-label-hotel">1</span><a>南京啦啦啦分店</a><span class="label label-danger">5星级</span></h4>
-                  <p>南京最好的酒店，啥都没有，要啥没啥，床都没有，就睡地板，价钱合适的很，绝对上档次的房间！欢迎入住！</p>
-                  <p class="sx-small-grey">“贼拉过瘾，相当舒服了”</p>
-                </div>
-                <div class="col-md-3 sx-vertical-line sx-content-center">
-                  <p><span class="sx-big-blue">4.9</span>/5分</p>
-                  <p>5000000人评价</p>
-                  <p class="sx-small-green">1条好评</p>
-                </div>
-                <div class="col-md-3 sx-content-center">
-                  <p>￥<span class="sx-big-red">500</span>起</p>
-                  <p><button class="btn btn-primary">进店看看</button></p>
-                </div>
-              </div>
-
-            </div>
-          </td>
-        </tr>
       </table>
 
       <hr>
@@ -275,8 +238,7 @@
 
       <!-- FOOTER -->
       <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2016 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        <p>&copy; 2016 Company, Inc. &middot; <a>Privacy</a> &middot; <a>Terms</a></p>
       </footer>
 
     </div><!-- /.container -->

@@ -1,12 +1,23 @@
 package action;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
+
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
+
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+
 import constant.OrderOperate;
+import constant.OrderState;
 import model.Customer;
 import model.Hotel;
 import model.Order;
@@ -25,6 +36,7 @@ public class OrderAction extends ActionSupport{
 	private int rid;
 	
 	private int oid;
+	private InputStream ajax;
 	
 	public String cancelOrder(){
 		boolean result = orderService.cancelOrder(oid);
@@ -35,30 +47,54 @@ public class OrderAction extends ActionSupport{
 		}
 	}
 	
-	public String saveOrders(){
+	public String showOrder(){
+		Order order = orderService.getOrder(oid);
 		Map session = ActionContext.getContext().getSession();
-		List<Order> orders = (List<Order>)session.get("orders");
-		if (customer1 != null) {
-			Order o = getOrder(orders, customer1.getOid());
-			customer1.setOrder(o);
-			addCustomer(customer1,o);
-			
-		}
-		if (customer2 != null) {
-			Order o = getOrder(orders, customer2.getOid());
-			customer2.setOrder(o);
-			addCustomer(customer2,o);
-		}
-		if (customer3 != null) {
-			Order o = getOrder(orders, customer3.getOid());
-			customer3.setOrder(o);
-			addCustomer(customer3,o);
-		}
-		boolean result = orderService.save(orders);
+		session.put("order", order);
+		return SUCCESS;
+	}
+	
+	public String saveComment(){
+		Map session = ActionContext.getContext().getSession();
+		Order order = (Order) session.get("order");
+		order.setComment_head(this.order.getComment_head());
+		order.setComment_content(this.order.getComment_content());
+		order.setStar(this.order.getStar());
+		order.setState(OrderState.JUDGE.getValue());
+		boolean result = orderService.save(order);
 		if (result == true) {
 			return SUCCESS;
 		}else {
 			return ERROR;
+		}
+	}
+	
+	public String saveOrder(){
+		Map session = ActionContext.getContext().getSession();
+		Order order = (Order)session.get("order");
+		if (customer1 != null) {
+			customer1.setOrder(order);
+			addCustomer(customer1,order);
+			
+		}
+		if (customer2 != null) {
+			customer2.setOrder(order);
+			addCustomer(customer2,order);
+		}
+		if (customer3 != null) {
+			customer3.setOrder(order);
+			addCustomer(customer3,order);
+		}
+		List<Order> orders = new ArrayList<>();
+		orders.add(order);
+		boolean result = orderService.save(orders);
+		if (result == true) {
+			session.remove("order");
+			ajax("success");
+			return SUCCESS;
+		}else {
+			ajax("error");
+			return SUCCESS;
 		}
 		
 	}
@@ -73,11 +109,7 @@ public class OrderAction extends ActionSupport{
 	}
 	
 	private void addCustomer(Customer customer,Order order){
-		if (customer != null) {
-			Set<Customer> customers = new HashSet<>();
-			customers.add(customer);
-			order.setCustomers(customers);
-		}
+		order.addCustomer(customer);
 	}
 	
 	public String handleOrder(){
@@ -87,17 +119,23 @@ public class OrderAction extends ActionSupport{
 		order.setHotel(hotel);
 		if (operate.equals(OrderOperate.IN.getValue())) {
 			Set<Customer> customers = new HashSet<>();
-			customers.add(customer1);
-			customers.add(customer2);
-			customers.add(customer3);
-			customer1.setOrder(order);
-			customer2.setOrder(order);
-			customer3.setOrder(order);
+			if (customer1 != null) {
+				customers.add(customer1);
+				customer1.setOrder(order);
+			}
+			if (customer2 != null) {
+				customers.add(customer2);
+				customer2.setOrder(order);
+			}
+			if (customer3 != null) {
+				customers.add(customer3);
+				customer3.setOrder(order);
+			}
 			order.setCustomers(customers);
 			order.setRoom(hotel.getRoom(rid));
 			result = roomService.checkIn(order);
 		}else if (operate.equals(OrderOperate.OUT.getValue())) {
-			result = roomService.checkOut(order.getOid());
+			result = roomService.checkOut(order.getOid(), 0);
 		}else if (operate.equals(OrderOperate.CANCEL.getValue())) {
 			result = roomService.cancelReserve(order.getOid());
 		}else {
@@ -108,6 +146,14 @@ public class OrderAction extends ActionSupport{
 		}else {
 			return ERROR;
 		}
+	}
+	
+	private void ajax(String content){
+		try {
+			ajax = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}	
 	}
 
 	public OrderService getOrderService() {
@@ -181,7 +227,14 @@ public class OrderAction extends ActionSupport{
 	public void setOid(int oid) {
 		this.oid = oid;
 	}
-	
+
+	public InputStream getAjax() {
+		return ajax;
+	}
+
+	public void setAjax(InputStream ajax) {
+		this.ajax = ajax;
+	}
 	
 
 }

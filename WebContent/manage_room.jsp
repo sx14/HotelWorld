@@ -1,3 +1,4 @@
+<%@page import="constant.OrderState"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Customer"%>
@@ -30,7 +31,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Theme Template for Bootstrap</title>
+    <title>Hotel World 酒店信息</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -42,44 +43,33 @@
     <!-- Custom styles for this template -->
     <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-update-room.css" rel="stylesheet">
+    <link href="css/customer/sx-style.css" rel="stylesheet">
 
 </head>
 
 <body>
 
 <!-- Fixed navbar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Bootstrap theme</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
+              </button>
+              <a class="navbar-brand" href="/">Hotel World</a>
+            </div>
+            <div id="navbar1" class="collapse navbar-collapse">
+              <ul class="nav navbar-nav" style="float:right">
+                <li class="active"><a>房间预订</a></li>
+                <li><a href="personalHome">酒店主页</a></li>
+                <li><a href="logout">退出登录</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
 
 <div class="container theme-showcase" role="main">
 
@@ -111,7 +101,7 @@
     	for(RoomType roomType : hotel.getRoomTypes()){
     		out.println("<div class=\"panel panel-info\">");
     		out.println("<div class=\"panel-heading\">");
-    		out.println("<h4><strong>房型"+roomType.getType()+"<span class=\"label label-success\">空房"+roomType.getEmptyRoomNum()+"间</span></strong></h4>");
+    		out.println("<h4><strong>"+roomType.getRoomType()+"<span class=\"label label-success\">空房"+roomType.getEmptyRoomNum()+"间</span></strong></h4>");
     		out.println("</div>");
     		out.println("<div class=\"panel-body\">");
     		out.println("<table class=\"table\">");
@@ -155,42 +145,71 @@
 			out.println("<form class=\"form-horizontal\" action=\"handleOrder\" method=\"post\">");
 			out.println("<input name=\"order.hid\" type=\"hidden\" class=\"form-control\" value=\""+hotel.getHid()+"\">");
 			out.println("<input name=\"rid\" type=\"hidden\" class=\"form-control\" value=\""+room.getRid()+"\">");
-			if(room.getState().equals("已预定") || room.getState().equals("已入住")){
+			if(room.getState().equals(OrderState.RESERVE.getStateName()) || room.getState().equals(OrderState.IN.getStateName())){
 				Order order = room.getOrder();
 				out.println("<input name=\"order.oid\" type=\"hidden\" class=\"form-control\" value=\""+order.getOid()+"\">");
 				out.println("<div class=\"form-group\">");
-				out.println("<label class=\"control-label col-md-2\">姓名</label>");
+				out.println("<label class=\"control-label col-md-2\">预订人</label>");
 				out.println("<div class=\"col-md-10\">");
-				out.println("<input name=\"order.user.name\" type=\"text\" class=\"form-control\" value=\""+order.getUser().getName()+"\">");
+				out.println("<input name=\"order.user.name\" type=\"text\" class=\"form-control\" value=\""+order.getUser().getName()+"\" readonly>");
 				out.println("</div>");
 				out.println("</div>");
 				out.println("<div class=\"form-group\">");
 				out.println("<label class=\"control-label col-md-2\" value=\""+order.getUser().getPhone()+"\">联系电话</label>");
 				out.println("<div class=\"col-md-10\">");
-				out.println("<input name=\"order.user.phone\" type=\"text\" class=\"col-md-10 form-control\" value=\""+order.getUser().getPhone()+"\">");
+				out.println("<input name=\"order.user.phone\" type=\"text\" class=\"col-md-10 form-control\" value=\""+order.getUser().getPhone()+"\" readonly>");
 				out.println("</div>");
 				out.println("</div>");
 				out.println("<div class=\"form-group\">");
 				out.println("<label class=\"control-label col-md-2\">日期</label>");
 				out.println("<div class=\"col-md-5\">");
-				out.println("<input name=\"order.in_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+order.getInDateString()+"\">");
+				out.println("<input name=\"order.in_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+order.getInDateString()+"\" readonly>");
 				out.println("</div>");
 				out.println("<div class=\"col-md-5\">");
-				out.println("<input name=\"order.out_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+order.getOutDateString()+"\">");
+				out.println("<input name=\"order.out_date\" type=\"date\" class=\"form-control col-md-5\" value=\""+order.getOutDateString()+"\" readonly>");
 				out.println("</div>");
 				out.println("</div>");
 				out.println("<hr>");
 				out.println("<h5>入住人信息</h5>");
+				int i = 1;
 				for(Customer customer : order.getCustomers()){
 					out.println("<div class=\"form-group\">");
+					out.println("<label class=\"control-label col-md-2\">入住人"+i+"</label>");
 					out.println("<div class=\"col-md-4\">");
-					out.println("<input type=\"text\" class=\"form-control\" placeholder=\"姓名\" value=\""+customer.getName()+"\">");
+					out.println("<input type=\"text\" class=\"form-control\" placeholder=\"姓名\" value=\""+customer.getName()+"\" readonly>");
 					out.println("</div>");
-					out.println("<div class=\"col-md-8\">");
-					out.println("<input type=\"text\" class=\"form-control\" placeholder=\"身份证号\" value=\""+customer.getId_num()+"\" >");
+					out.println("<div class=\"col-md-6\">");
+					out.println("<input type=\"text\" class=\"form-control\" placeholder=\"身份证号\" value=\""+customer.getId_num()+"\" readonly>");
 					out.println("</div>");
 					out.println("</div>");
+					i++;
 				}
+				out.println("<hr>");
+				out.println("<h5>支付信息</h5>");
+				out.println("<div class=\"form-group\">");
+				out.println("<label class=\"control-label col-md-2\">支付方式</label>");
+				out.println("<div class=\"col-md-4\">");
+				out.println("<select name=\"order.is_vip\" class=\"form-control\">");
+				if(order.getUser().isVIP()){//是会员
+					out.println("<option value=\"0\">现金</option>");
+					if(order.getUser().getMoney() >= order.getVip_price()){//会员卡金额充足
+						out.println("<option value=\"1\">会员卡</option>");
+					}
+				}else{
+					out.println("<option value=\"0\">现金</option>");
+				}
+				out.println("</select>");
+				out.println("</div>");
+				out.println("<div class=\"col-md-6\">");
+				if(order.getUser().isVIP()){
+					out.println("<label class=\"text-success control-label\">账户余额 "+order.getUser().getMoney()+"￥</label>");
+				}else{
+					out.println("<label class=\"text-warning control-label\">非会员</label>");
+				}
+				out.println("</div>");
+				out.println("</div>");
+				out.println("<span class=\"label label-success\">房费</span><label>"+room.getRoomType().getPrice()+"￥</label><label>(会员价"+room.getRoomType().getVip_price()+"￥)</label>");
+				out.println("</div>");
 				}else{
 				out.println("<div class=\"form-group\">");
 				out.println("<label class=\"control-label col-md-2\">姓名</label>");
@@ -215,36 +234,33 @@
 				out.println("</div>");
 				out.println("<hr>");
 				out.println("<h5>入住人信息</h5>");
-				for(int i = 0 ; i < 3 ; i ++){
+				for(int i = 0 ; i < room.getRoomType().getCapacity() ; i ++){
 					out.println("<div class=\"form-group\">");
+					out.println("<label class=\"control-label col-md-2\">入住人"+(i+1)+"</label>");
 					out.println("<div class=\"col-md-4\">");
 					out.println("<input name=\"customer"+(i+1)+".name\" type=\"text\" class=\"form-control\" placeholder=\"姓名\">");
 					out.println("</div>");
-					out.println("<div class=\"col-md-8\">");
+					out.println("<div class=\"col-md-6\">");
 					out.println("<input name=\"customer"+(i+1)+".id_num\" type=\"text\" class=\"form-control\" placeholder=\"身份证号\">");
 					out.println("</div>");
 					out.println("</div>");
 				}
+				out.println("<hr>");
+				out.println("<h5>支付信息</h5>");
+				out.println("<div class=\"form-group\">");
+				out.println("<label class=\"control-label col-md-2\">支付方式</label>");
+				out.println("<div class=\"col-md-4\">");
+				out.println("<select name=\"order.is_vip\" class=\"form-control\">");
+				out.println("<option value=\"0\">现金</option>");
+				out.println("</select>");
+				out.println("</div>");
+				out.println("</div>");
+				out.println("<span class=\"label label-success\">房费</span><label>"+room.getRoomType().getPrice()+"￥</label><label>(会员价"+room.getRoomType().getVip_price()+"￥)</label>");
+				out.println("</div>");
 			}
-			out.println("<hr>");
-			out.println("<h5>支付信息</h5>");
-			out.println("<div class=\"form-group\">");
-			out.println("<label class=\"control-label col-md-2\">支付方式</label>");
-			out.println("<div class=\"col-md-2\">");
-			out.println("<select name=\"order.is_vip\" class=\"form-control\">");
-			out.println("<option value=\"0\">现金</option>");
-			out.println("<option value=\"1\">会员卡</option>");
-			out.println("</select>");
-			out.println("</div>");
-			out.println("<div class=\"col-md-8\">");
-			out.println("<input type=\"number\" class=\"form-control\" placeholder=\"会员卡号\">");
-			out.println("</div>");
-			out.println("</div>");
-			out.println("<span class=\"label label-success\">房费</span><label>1000￥</label><label>(会员价1￥)</label>");
-			out.println("</div>");
 			out.println("<div class=\"modal-footer\">");
 			out.println("<input type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" value=\"返回\">");
-			if(room.getState().equals("已预定")){
+			if(room.getState().equals("已预订")){
 				out.println("<input name=\"operate\" type=\"submit\" class=\"btn btn-danger\" value=\"取消预定\">");
 				out.println("<input name=\"operate\" type=\"submit\" class=\"btn btn-primary\" value=\"入住\">");
 			}else if(room.getState().equals("已入住")){

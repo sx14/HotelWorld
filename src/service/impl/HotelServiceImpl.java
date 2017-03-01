@@ -1,11 +1,7 @@
 package service.impl;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import constant.ApplyState;
@@ -19,19 +15,16 @@ import model.Room;
 import model.RoomType;
 import model.RoomDraft;
 import service.HotelService;
+import util.FileHelper;
 
 public class HotelServiceImpl implements HotelService{
 	private HotelDAO hotelDAO;
 	private HotelDraftDAO hotelDraftDAO;
 	private RoomDAO roomDAO;
 	
-	
-	
-
-
 	@Override
-	public List<Hotel> getHotels(String city) {
-		List<Hotel> allHotels = hotelDAO.get(city);
+	public List<Hotel> getHotels(String city, int level) {
+		List<Hotel> allHotels = hotelDAO.get(city, level);
 		List<Hotel> topHotels = sortByStar(allHotels);
 		return topHotels;
 	}
@@ -55,33 +48,32 @@ public class HotelServiceImpl implements HotelService{
 	}
 
 	@Override
-	public boolean updateHotelDraft(Hotel hotel) {
+	public boolean saveHotelDraft(Hotel hotel) {
 		String roomPath = "img/room";
+		String hotelPath = "img/hotel";
 		HotelDraft hotelDraft = new HotelDraft(hotel);
+		hotelDraft.setState(ApplyState.WAIT.getValue());
 		Set<RoomDraft> roomDrafts = new HashSet<>();
+		String storeRoomPath = ServletActionContext.getServletContext().getRealPath("/"+roomPath);
 		for(RoomType roomType : hotel.getRoomTypes()){
 			if (roomType.getImg() != null) {
-				String storePath = ServletActionContext.getServletContext().getRealPath("/"+roomPath);
-				roomType.setImgFileName(hotel.getHid()+roomType.getImgFileName());
-				File img = new File(new File(storePath),roomType.getImgFileName());
-				if (!img.getParentFile().exists()) {
-					img.getParentFile().mkdirs();
-				}
-				try {
-					FileUtils.copyFile(roomType.getImg(), img);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				roomType.setImage(roomPath+"/"+roomType.getImgFileName());
+				roomType.setImgFileName(roomPath+"/"+roomType.getTid()+roomType.getImgFileName());
+				FileHelper.saveFile(roomType.getImg(),roomType.getImgFileName(), storeRoomPath);
+				roomType.setImage(roomType.getImgFileName());
 			}
-
-			roomType.setHotel(hotel);
 			RoomDraft roomDraft = new RoomDraft(roomType);
 			roomDraft.setHotelDraft(hotelDraft);
 			roomDrafts.add(roomDraft);
 		}
+		String storeHotelPath = ServletActionContext.getServletContext().getRealPath("/"+hotelPath);
+		FileHelper.saveFile(hotel.getImgS(), hotel.getHid()+hotel.getImgSFileName(), storeHotelPath);
+		FileHelper.saveFile(hotel.getImgM(), hotel.getHid()+hotel.getImgMFileName(), storeHotelPath);
+		FileHelper.saveFile(hotel.getImgB(), hotel.getHid()+hotel.getImgBFileName(), storeHotelPath);
+		hotelDraft.setImage_small(hotelPath + "/s" + hotel.getHid() + hotel.getImgSFileName());
+		hotelDraft.setImage_mid(hotelPath + "/m" + hotel.getHid() + hotel.getImgMFileName());
+		hotelDraft.setImage_big(hotelPath + "/b" + hotel.getHid() + hotel.getImgBFileName());
 		hotelDraft.setRoomDrafts(roomDrafts);
-		return  hotelDraftDAO.save(hotelDraft);
+		return  hotelDraftDAO.saveOrUpdate(hotelDraft);
 	}
 
 	@Override
@@ -101,7 +93,6 @@ public class HotelServiceImpl implements HotelService{
 			Set<Room> rooms = new HashSet<>();
 			for(int i = 0 ; i < roomType.getNum() ; i++){
 				Room room = new Room();
-//				room.setTid(roomType.getTid());
 				room.setRoomType(roomType);
 				room.setNum(i+1);
 				rooms.add(room);
@@ -117,7 +108,6 @@ public class HotelServiceImpl implements HotelService{
 		}else {
 			return false;
 		}
-		
 	}
 
 	@Override
@@ -146,8 +136,16 @@ public class HotelServiceImpl implements HotelService{
 	}
 
 	@Override
-	public boolean approveUpdateHotel(Hotel hotel) {
-		return false;
+	public boolean updateHotel(HotelDraft hotelDraft) {
+		boolean result1 = true;
+		boolean result2 = true;
+		if (hotelDraft.getState() == ApplyState.PASS.getValue()) {
+			Hotel hotel = hotelDAO.getByHid(hotelDraft.getHid()).get(0);
+			hotel.modifyHotel(hotelDraft);
+			result1 = hotelDAO.saveOrUpdate(hotel);
+			result2 = hotelDraftDAO.saveOrUpdate(hotelDraft);
+		}
+		return (result1 && result2);
 	}
 
 	public RoomDAO getRoomDAO() {
@@ -157,6 +155,5 @@ public class HotelServiceImpl implements HotelService{
 	public void setRoomDAO(RoomDAO roomDAO) {
 		this.roomDAO = roomDAO;
 	}
-	
 	
 }

@@ -3,6 +3,7 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,6 +39,13 @@ public class Order {
 	private Room room;
 	private int state;
 	
+	public void addCustomer(Customer customer){
+		if (customers == null) {
+			customers = new HashSet<>();
+		}
+		customers.add(customer);
+	}
+	
 	@Transient
 	public String getStateString(){
 		String stateString = null;
@@ -45,7 +53,8 @@ public class Order {
 			case 0 : stateString = "等待入住";break;
 			case 1 : stateString = "已入住";break;
 			case 2 : stateString = "已退房";break;
-			case 3 : stateString = "已取消";break;
+			case 3 : stateString = "已评价";break;
+			case -1 : stateString = "已取消";break;
 			default : stateString = "未知";
 		}
 		return stateString;
@@ -119,7 +128,7 @@ public class Order {
 		this.comment_head = comment_head;
 	}
 
-	@ManyToOne(targetEntity=User.class)
+	@ManyToOne
 	@JoinColumn(name="uid")
 	public User getUser() {
 		return user;

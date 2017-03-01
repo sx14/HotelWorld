@@ -54,7 +54,7 @@
 
             <div class="inner cover">
                 <h1 class="cover-heading">Hotel World</h1>
-                <form class="form-horizontal col-md-10 col-md-offset-1" action="registerQuickly" method="post">
+                <form id="registerForm" class="form-horizontal col-md-10 col-md-offset-1">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-8">
@@ -70,27 +70,19 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">联系电话</label>
                         <div class="col-sm-8">
-                            <input name="user.phone" type="text" class="form-control" placeholder="请输入您的手机号码">
+                            <input id="user.phone" name="user.phone" type="text" class="form-control" placeholder="请输入您的手机号码">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">验证码</label>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control"  placeholder="请输入短信验证码">
+                            <input name="validate" type="password" class="form-control"  placeholder="请输入短信验证码">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> 已阅读同意书
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-1 col-sm-10">
-                            <button type="submit" class="btn btn-default col-md-4 col-md-offset-4" onclick="checkExists()">注册</button>
+                            <input class="btn btn-default col-md-4 col-md-offset-4" onclick="checkExists()" value="注册">
                         </div>
                     </div>
                 </form>
@@ -110,7 +102,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <script src="js/customer/sx-ajax.js"></script>
 </body>
 </html>

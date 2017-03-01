@@ -26,7 +26,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>Theme Template for Bootstrap</title>
+    <title>Hotel World</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -54,27 +54,38 @@
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Hotel World</a>
-        </div>
-        <div id="navbar1" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav" style="float:right">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a class="navbar-brand" href="">HotelWorld</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav" style="float:right">
+		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
+		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="logout">退出登录</a></li>
+		                <li class="dropdown">
+		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		                    <ul class="dropdown-menu">
+		                        <li><a href="#">Action</a></li>
+		                        <li><a href="#">Another action</a></li>
+		                        <li><a href="#">Something else here</a></li>
+		                        <li role="separator" class="divider"></li>
+		                        <li class="dropdown-header">Nav header</li>
+		                        <li><a href="#">Separated link</a></li>
+		                        <li><a href="#">One more separated link</a></li>
+		                    </ul>
+		                </li>
+		            </ul>
+		        </div><!--/.nav-collapse -->
+		    </div>
+		</nav>
 
     <div class="container theme-showcase" role="main">
       <!-- Main jumbotron for a primary marketing message or call to action -->
@@ -82,7 +93,7 @@
 
       <div class="col-md-8">
         <div class="date">
-          <form class="form-inline" action="chooseRoom" method="post">
+          <form class="form-inline" action="chooseRoom?hid=<%=hotel.getHid() %>" method="post">
             <div class="form-group sx-search">
             <%
             	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,7 +128,7 @@
           		out.println("</div>");
           		out.println("<div class=\"col-md-3 sx-vertical-center\">");
           		if(roomType.getEmptyRoomNum() > 0){
-        	  		out.println("<a href=\"reserveRoom?num=1&tid="+roomType.getTid()+"\" class=\"btn btn-primary\">预定</a>");
+        	  		out.println("<a href=\"reserveRoom?tid="+roomType.getTid()+"\" class=\"btn btn-primary\">预定</a>");
           		}else{
         	  		out.println("<button class=\"btn btn-primary\" disabled>已满</a>");
           		}
@@ -145,9 +156,9 @@
             		out.println("<p><span class=\"sx-small-blue\">"+order.getComment_head()+"</span></p>");
             		out.println("<p><span class=\"sx-label-key\">用户评价</span><span class=\"sx-label-value\">");
             		for(int i = 0 ; i < order.getStar() ; i++){
-            			out.print("<img src=\"../img/star.png\">");
+            			out.print("<img src=\"img/star.png\">");
             		}for(int i = order.getStar() ; i < Config.MAX_STAR ; i++){
-            			out.print("<img src=\"../img/star2.png\">");
+            			out.print("<img src=\"img/star1.png\">");
             		}
             		out.println("</span></p>");
             		out.println("<p><span class=\"sx-label-key\">入住时间</span><span class=\"sx-label-value\">"+order.getInDateString()+" --- "+order.getOutDateString()+"</span></p>");
@@ -164,11 +175,11 @@
         <div class="row">
           <img src="../img/hotel-mid-1.jpg" class="sx-img-star-hotel">
           <div class="sx-padding-all">
-            <p class="sx-big-blue"><%=hotel.getCity()+hotel.getName()%></p>
+            <p class="sx-big-blue"><%=hotel.getCity()+hotel.getHotel_name()%></p>
             <p>地址：江苏省南京市鼓楼区汉口路22号</p>
-            <p><span class="sx-big-blue"><%=hotel.getStar() %></span>/5分</p>
+            <p><span class="sx-big-blue"><%=String.format("%.1f",hotel.getAvgStar() ) %></span>/5分</p>
             <p>￥<span class="sx-big-red"><%=hotel.getLowestPrice() %></span>起</p>
-            <p><span class="sx-small-blue"><%=hotel.getCommentNum() %></span></p>
+            <p><span class="sx-small-blue"><%=hotel.getCommentNum() %></span>条评价</p>
           </div>
         </div>
       </div>

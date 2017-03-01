@@ -1,8 +1,9 @@
 package model;
-
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import constant.ApplyState;
 import constant.Config;
+import constant.HotelStar;
 import constant.OrderState;
 
 @Entity
@@ -25,21 +27,82 @@ public class Hotel implements Serializable{
 	private static final long serialVersionUID = -5414687446666094220L;
 	private int hid;
 	private String city;
-	private double start_money;
+	private int start_money;
 	private Date register_date;
 	private Set<RoomType> roomTypes;
 	private Set<Order> orders;
 	private User user;
 	private int star;
-	private String image_small;	//酒店图片
-	private String image_mid;	//酒店图片
-	private String image_big;	//酒店图片
+	private String image_small;	//酒店图片路径
+	private String image_mid;	//酒店图片路径
+	private String image_big;	//酒店图片路径
 	private String name;
 	private String description;
 	private String hotel_name;
 	private String id_num;
 	private String email;
 	private int state;
+	private String position;
+	
+	private File imgS;
+	private String imgSFileName;
+	private String imgSContentType;
+	private File imgM;
+	private String imgMFileName;
+	private String imgMContentType;
+	private File imgB;
+	private String imgBFileName;
+	private String imgBContentType;
+	
+	
+	public void modifyHotel(HotelDraft hotelDraft){
+		if (hotelDraft.getState() == 1) {
+			this.state = ApplyState.OPEN.getValue();
+		}
+		this.description = hotelDraft.getDescription();
+		this.email = hotelDraft.getEmail();
+		this.image_big = hotelDraft.getImage_big();
+		this.image_mid = hotelDraft.getImage_mid();
+		this.image_small = hotelDraft.getImage_small();
+		Set<RoomType> types = new HashSet<>();
+		for(RoomDraft roomDraft : hotelDraft.getRoomDrafts()){
+			Iterator<RoomType> iterator = roomTypes.iterator();
+			while (iterator.hasNext()) {
+				RoomType roomType = (RoomType) iterator.next();
+				if(roomType.getTid()== roomDraft.getTid()){
+					RoomType roomType2 = new RoomType(roomDraft, roomType);
+					Set<Room> rooms = roomType2.getRooms();
+					if (rooms==null || rooms.size() == 0) {
+						for(int i = 0 ; i < roomType2.getNum() ; i++){
+							Room room = new Room();
+							room.setNum(i+1);
+							room.setRoomType(roomType2);
+							rooms.add(room);
+						}
+						roomType2.setRooms(rooms);
+					}
+					types.add(roomType2);
+					break;
+				}
+			}
+		}
+		this.roomTypes.clear();
+		this.roomTypes.addAll(types);
+	}
+	
+	@Transient
+	public String getStateString(){
+		switch (state) {
+		case 0:
+			return "待审批";
+		case 1:
+			return "待开业";
+		case 2:
+			return "已开业";
+		default:
+			return "未通过";
+		}
+	}
 	
 	@Transient
 	public Room getRoom(int rid){
@@ -146,12 +209,22 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getGoodCommentNum(){
 		int sum = 0;
+		for(Order order : orders){
+			if (order.getState() == OrderState.JUDGE.getValue() &&(order.getStar() >= 4)) {
+				sum ++;
+			}
+		}
 		return sum;
 	}
 	
 	@Transient
 	public int getCommentNum(){
 		int sum = 0;
+		for(Order order : orders){
+			if (order.getState() == OrderState.JUDGE.getValue()) {
+				sum ++;
+			}
+		}
 		return sum;
 	}
 	
@@ -222,7 +295,7 @@ public class Hotel implements Serializable{
 				sum += order.getStar();
 			}
 			double avgStar = sum/orders.size();
-			return avgStar;
+			return (avgStar);
 		}else {
 			return 0;
 		}
@@ -267,12 +340,7 @@ public class Hotel implements Serializable{
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public double getStart_money() {
-		return start_money;
-	}
-	public void setStart_money(double start_money) {
-		this.start_money = start_money;
-	}
+
 	public Date getRegister_date() {
 		return register_date;
 	}
@@ -282,6 +350,7 @@ public class Hotel implements Serializable{
 	
 	public Hotel(){
 		this.state = ApplyState.WAIT.getValue();
+		this.description = "";
 	}
 	
 	@Transient
@@ -296,12 +365,20 @@ public class Hotel implements Serializable{
 		}
 	}
 	
+	public int getStart_money() {
+		return start_money;
+	}
+
+	public void setStart_money(int start_money) {
+		this.start_money = start_money;
+	}
+
 	@Transient
 	public int getRoomNumByType(int type){
 		int sum = 0;
 		for(RoomType room : roomTypes){
 			if (room.getType() == type) {
-				sum ++;
+				sum += room.getNum();
 			}
 		}
 		return sum;
@@ -317,6 +394,17 @@ public class Hotel implements Serializable{
 			}
 		}
 		return capacity;
+	}
+	
+	@Transient
+	public String getLevel(){
+		HotelStar[] stars = HotelStar.values();
+		for(int i = 0 ; i < stars.length ; i++){
+			if (stars[i].getValue() == star) {
+				return stars[i].getName();
+			}
+		}
+		return "未知";
 	}
 	
 	public Hotel(Hotel hotel){
@@ -337,6 +425,98 @@ public class Hotel implements Serializable{
 		this.start_money = hotel.getStart_money();
 		this.state = hotel.getState();
 		this.user = hotel.getUser();
+		this.position = hotel.getPosition();
+	}
+
+	@Transient
+	public File getImgS() {
+		return imgS;
+	}
+
+	public void setImgS(File imgS) {
+		this.imgS = imgS;
+	}
+
+	@Transient
+	public String getImgSFileName() {
+		return imgSFileName;
+	}
+
+	public void setImgSFileName(String imgSFileName) {
+		this.imgSFileName = imgSFileName;
+	}
+
+	@Transient
+	public String getImgSContentType() {
+		return imgSContentType;
+	}
+
+	public void setImgSContentType(String imgSContentType) {
+		this.imgSContentType = imgSContentType;
+	}
+
+	@Transient
+	public File getImgM() {
+		return imgM;
+	}
+
+	public void setImgM(File imgM) {
+		this.imgM = imgM;
+	}
+
+	@Transient
+	public String getImgMFileName() {
+		return imgMFileName;
+	}
+
+	public void setImgMFileName(String imgMFileName) {
+		this.imgMFileName = imgMFileName;
+	}
+
+	@Transient
+	public String getImgMContentType() {
+		return imgMContentType;
+	}
+
+	public void setImgMContentType(String imgMContentType) {
+		this.imgMContentType = imgMContentType;
+	}
+
+	@Transient
+	public File getImgB() {
+		return imgB;
+	}
+
+	public void setImgB(File imgB) {
+		this.imgB = imgB;
+	}
+
+	@Transient
+	public String getImgBFileName() {
+		return imgBFileName;
+	}
+
+	public void setImgBFileName(String imgBFileName) {
+		this.imgBFileName = imgBFileName;
+	}
+
+	@Transient
+	public String getImgBContentType() {
+		return imgBContentType;
+	}
+
+	public void setImgBContentType(String imgBContentType) {
+		this.imgBContentType = imgBContentType;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 	
+	
+
 }

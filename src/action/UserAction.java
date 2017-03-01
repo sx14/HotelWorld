@@ -1,8 +1,11 @@
 package action;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -13,21 +16,27 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+
+import constant.ApplyState;
 import constant.Config;
 import constant.UserRole;
+import model.Hotel;
 import model.User;
 import model.Visa;
+import service.HotelService;
 import service.UserService;
+import util.FileHelper;
 
 public class UserAction extends ActionSupport{
 	private static final long serialVersionUID = -2992907193368305060L;
 	private UserService userService;
+	private HotelService hotelService;
 	private User user;
 	private File image;
 	private String imageFileName;
 	private String imageContentType;
 
-
+	private InputStream ajax;
 	private static final String headPath = "img/head";
 	
 	//会员卡充值
@@ -35,16 +44,11 @@ public class UserAction extends ActionSupport{
 	private String password;
 	
 	private void ajax(String content){
-		HttpServletResponse response = ServletActionContext.getResponse();
-		PrintWriter printWriter;
 		try {
-			printWriter = response.getWriter();
-			printWriter.write(content);
-			printWriter.flush();
-			printWriter.close();
-		} catch (IOException e) {
+			ajax = new ByteArrayInputStream(content.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}		
+		}	
 	}
 	
 
@@ -83,16 +87,7 @@ public class UserAction extends ActionSupport{
 		User user = (User) session.get("user");
 		String storePath = ServletActionContext.getServletContext().getRealPath("/"+headPath);
 		imageFileName = user.getUid()+imageFileName;
-		try {
-			File saveFile = new File(new File(storePath),imageFileName);
-			if (!saveFile.getParentFile().exists()) {
-				saveFile.getParentFile().mkdirs();
-			}
-			FileUtils.copyFile(image,saveFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ERROR;
-		}
+		FileHelper.saveFile(image, imageFileName, storePath);
 		user.setName(this.user.getName());
 		user.setId_num(this.user.getId_num());
 		user.setEmail(this.user.getEmail());
@@ -114,17 +109,23 @@ public class UserAction extends ActionSupport{
 		}
 	}
 
-	public void checkExists(){
+	public String checkExists(){
 		boolean isExists = userService.checkExists(user);
 		if (isExists) {
 			ajax("error");
 		}else{
 			ajax("success");
 		}
+		return SUCCESS;
 	}
 
 	
 	public String registerQuickly(){
+		boolean exists = userService.checkExists(user);
+		if (exists != false) {
+			ajax("exists");
+			return SUCCESS;
+		}
 		//TODO 读取表单数据，创建User
 		User user1 = new User();
 		user1.setUsername(user.getUsername());
@@ -137,10 +138,11 @@ public class UserAction extends ActionSupport{
 		if (u != null) {
 			Map<String,Object> session = ActionContext.getContext().getSession();
 			session.put("user", u);
-			return SUCCESS;
+			ajax("success");
 		}else {
-			return ERROR;
+			ajax("error");
 		}
+		return SUCCESS;
 	}
 	
 	public String login(){
@@ -152,15 +154,21 @@ public class UserAction extends ActionSupport{
 			Map<String,Object> session = ActionContext.getContext().getSession();
 			session.put("user", userDetail);
 			if (userDetail.getRole()== UserRole.MANAGER.getValue()) {
-				return UserRole.MANAGER.name();
+				ajax("manageNewHotel");
 			}else if (userDetail.getRole() == UserRole.OWNER.getValue()) {
-				return UserRole.OWNER.name();
+				Hotel hotel = hotelService.getHotelByUid(userDetail.getUid());
+				if(hotel != null && hotel.getState() == ApplyState.OPEN.getValue()){					
+					ajax("manageRoom");
+				}else{
+					ajax("chooseHotel");
+				}
 			}else{
-				return UserRole.USER.name();
+				ajax("chooseHotel");
 			}
 		}else{
-			return ERROR;
+			ajax("error");
 		}
+		return SUCCESS;
 	}
 
 	public UserService getUserService() {
@@ -218,5 +226,25 @@ public class UserAction extends ActionSupport{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+
+
+	public InputStream getAjax() {
+		return ajax;
+	}
+
+
+
+	public void setAjax(InputStream ajax) {
+		this.ajax = ajax;
+	}
+
+
+	public HotelService getHotelService() {
+		return hotelService;
+	}
 	
+	public void setHotelService(HotelService hotelService) {
+		this.hotelService = hotelService;
+	}
 }

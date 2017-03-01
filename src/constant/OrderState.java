@@ -1,10 +1,12 @@
 package constant;
 
 public enum OrderState {
-	RESERVE(0),IN(1),OUT(2),CANCEL(-1);
+	RESERVE(0,"已预订"),IN(1,"已入住"),OUT(2,"已退房"),JUDGE(3,"已评价"),CANCEL(-1,"已取消");
 	
+	private String state;
 	private int value;
-	private OrderState(int value){
+	private OrderState(int value,String state){
+		this.state = state;
 		this.value = value;
 	}
 	
@@ -12,7 +14,7 @@ public enum OrderState {
 		return value;
 	}
 	
-	public static String getOrderStateInChinese(int value){
+	public static String getRoomStateInChinese(int value){
 		String state;
 		switch (value) {
 		case 0:
@@ -24,6 +26,10 @@ public enum OrderState {
 		default:
 			state = "空闲";
 		}
+		return state;
+	}
+	
+	public String getStateName(){
 		return state;
 	}
 }

@@ -38,7 +38,7 @@ public class Room {
 		String state = "空闲";
 		if (orders != null) {
 			for(Order order : orders){
-				state = OrderState.getOrderStateInChinese(order.getState());
+				state = OrderState.getRoomStateInChinese(order.getState());
 				break;
 			}
 		}

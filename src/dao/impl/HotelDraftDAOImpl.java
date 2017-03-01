@@ -21,7 +21,7 @@ public class HotelDraftDAOImpl implements HotelDraftDAO{
 	public List<HotelDraft> get(ApplyState state) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		String hql = "from HotelDraft where state="+state;
+		String hql = "from HotelDraft where state="+state.getValue();
 		Query query = session.createQuery(hql);
 		List<HotelDraft> hotelDrafts = query.getResultList();
 		transaction.commit();
@@ -29,10 +29,10 @@ public class HotelDraftDAOImpl implements HotelDraftDAO{
 		return hotelDrafts;
 	}
 	@Override
-	public boolean save(HotelDraft hotel) {
+	public boolean saveOrUpdate(HotelDraft hotel) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.saveOrUpdate(hotel);
+		session.saveOrUpdate(session.merge(hotel));
 		transaction.commit();
 		session.close();
 		return true;

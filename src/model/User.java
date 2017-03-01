@@ -40,7 +40,7 @@ public class User {
 	
 	@Transient
 	public boolean isVIP(){
-		if (visa != null && visa.getMoney()>=Config.VIP_MONEY_LEAST) {
+		if (visa != null && money>=Config.VIP_MONEY_LEAST) {
 			return true;
 		}else {
 			return false;
@@ -80,7 +80,7 @@ public class User {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	@OneToMany(mappedBy="user",fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="user", fetch=FetchType.EAGER)
 	public Set<Order> getOrders() {
 		return orders;
 	}

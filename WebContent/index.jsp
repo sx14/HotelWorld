@@ -58,13 +58,13 @@
           <div class="inner cover">
             <h1 class="cover-heading">Hotel World</h1>
             <p class="lead">专注酒店三十年，始于1980</p>
-            <form action="login" method="post">
+            <form id="loginForm">
               <div class="sx-content-center">
                 <div class="row">
                   <div class="col-md-4 col-md-offset-4 form-horizontal">
                     <input name="user.phone" type="tel" class="form-control sx-cover-form" placeholder="手机号码">
                     <input name="user.password" type="password" class="form-control sx-cover-form" placeholder="密码">
-                    <input type="submit" class="btn btn-default sx-cover-form sx-cover-button" value="登录">
+                    <input class="btn btn-default sx-cover-form sx-cover-button" value="登录" onclick="login()">
                   </div>
                  </div>
               </div>
@@ -85,7 +85,8 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
+    <script src="js/jquery.min.js"></script>
+	<script src="js/customer/sx-ajax.js"></script>
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/bootstrap.min.js"></script>
   </body>
 </html>

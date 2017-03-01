@@ -18,19 +18,15 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Theme Template for Bootstrap</title>
+    <title>Hotel World 注册酒店</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-hotel-register.css" rel="stylesheet">
-
+	<link href="css/customer/sx-style.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,27 +35,38 @@
 </head>
 
 <body>
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Hotel World</a>
-            </div>
-            <div id="navbar1" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav" style="float:right">
-                <li><a href="#">我的Hotel</a></li>
-                <li class="active"><a href="register_hotel.jsp">我要开店</a></li>
-                <li><a href="#contact">退出登录</a></li>
-                <li><a href="#contact">Contact</a></li>
-              </ul>
-            </div><!--/.nav-collapse -->
-          </div>
-        </nav>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+		    <div class="container">
+		        <div class="navbar-header">
+		            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		                <span class="sr-only">Toggle navigation</span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		                <span class="icon-bar"></span>
+		            </button>
+		            <a class="navbar-brand" href="">HotelWorld</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		            <ul class="nav navbar-nav" style="float:right">
+		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
+		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="logout">退出登录</a></li>
+		                <li class="dropdown">
+		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		                    <ul class="dropdown-menu">
+		                        <li><a href="#">Action</a></li>
+		                        <li><a href="#">Another action</a></li>
+		                        <li><a href="#">Something else here</a></li>
+		                        <li role="separator" class="divider"></li>
+		                        <li class="dropdown-header">Nav header</li>
+		                        <li><a href="#">Separated link</a></li>
+		                        <li><a href="#">One more separated link</a></li>
+		                    </ul>
+		                </li>
+		            </ul>
+		        </div><!--/.nav-collapse -->
+		    </div>
+		</nav>
 
 <div class="container theme-showcase" role="main">
 
@@ -72,7 +79,7 @@
             <h4><strong>新店注册</strong></h4>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal" action="registerHotel" method="post">
+            <form id="hotelForm" class="form-horizontal">
                 <div class="col-md-6 sx-col-left">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">酒店名称</label>
@@ -117,7 +124,7 @@
                 </div>
                 <div class="col-md-6 sx-col-right">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">酒店位置</label>
+                        <label class="col-sm-2 control-label">所在城市</label>
                         <div class="col-sm-9">
                             <select name="hotel.city" class="form-control" >
                                 <option value ="北京">北京</option>
@@ -129,9 +136,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">位置</label>
+                        <div class="col-sm-9">
+                            <input name="hotel.position" type="text" class="form-control"  placeholder="请填入详细位置">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">房型1</label>
                         <div class="col-sm-4">
-                            <input name="room1.capacity" type="number" class="form-control"  placeholder="房间人数">
+                            <input name="room1.capacity" type="number" class="form-control"  placeholder="房间人数" value="1" readonly>
                         </div>
                         <div class="col-sm-5">
                             <div class="input-group">
@@ -143,7 +156,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">房型2</label>
                         <div class="col-sm-4">
-                            <input name="room2.capacity" type="number" class="form-control"  placeholder="房间人数">
+                            <input name="room2.capacity" type="number" class="form-control"  placeholder="房间人数" value="2" readonly>
                         </div>
                         <div class="col-sm-5">
                             <div class="input-group">
@@ -155,7 +168,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">房型3</label>
                         <div class="col-sm-4">
-                            <input name="room3.capacity" type="number" class="form-control"  placeholder="房间人数">
+                            <input name="room3.capacity" type="number" class="form-control"  placeholder="房间人数" value="3" readonly>
                         </div>
                         <div class="col-sm-5">
                             <div class="input-group">
@@ -165,11 +178,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-2">
-                            <input type="reset" class="btn btn-default sx-right-float" value="重新输入">
+                    	<label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input class="btn btn-default sx-right-float"  onclick ="reset(hotelForm)" value="重新输入">
                         </div>
                         <div class="col-sm-5">
-                            <input type="submit" class="btn btn-primary" value="确认注册">
+                            <input class="btn btn-primary" value="确认注册" onclick="registerHotel()">
                         </div>
                     </div>
                 </div>
@@ -182,10 +196,8 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="../../assets/js/vendor/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="../../assets/js/docs.min.js"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/customer/sx-ajax.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@ import service.OrderService;
 public class OrderServiceImpl implements OrderService {
 	private OrderDAO orderDAO;
 	@Override
-	public List<Order> getOrder(int uid) {
+	public List<Order> getOrderByUid(int uid) {
 		return orderDAO.getByUser(uid);
 	}
 
@@ -31,6 +31,16 @@ public class OrderServiceImpl implements OrderService {
 	}
 	public void setOrderDAO(OrderDAO orderDAO) {
 		this.orderDAO = orderDAO;
+	}
+
+	@Override
+	public Order getOrder(int oid) {
+		return orderDAO.getById(oid);
+	}
+
+	@Override
+	public boolean save(Order order) {
+		return orderDAO.save(order);
 	}
 	
 }

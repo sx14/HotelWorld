@@ -1,24 +1,19 @@
 package action;
 
-
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+
+import constant.ApplyState;
 import constant.City;
 import constant.Config;
+import constant.HotelStar;
+import constant.OrderState;
 import model.Hotel;
 import model.HotelDraft;
 import model.Order;
@@ -27,7 +22,6 @@ import model.User;
 import service.HotelService;
 import service.OrderService;
 import service.RoomService;
-import service.UserService;
 
 public class HotelAction extends ActionSupport{
 	private static final long serialVersionUID = -5785352294133817532L;
@@ -38,29 +32,21 @@ public class HotelAction extends ActionSupport{
 	private Date outDate;
 	private String expectedCity;
 	private Hotel hotel;
-	private RoomType room1;//用于注册
-	private RoomType room2;//用于注册
-	private RoomType room3;//用于注册
+	private RoomType room1;//用于注册，修改
+	private RoomType room2;//用于注册，修改
+	private RoomType room3;//用于注册，修改
 	
 	private int level;//酒店星级，用于搜索酒店
 	
 	private int hid;//用于显示酒店详细
 	
-	private void ajax(String content){
-		HttpServletResponse response = ServletActionContext.getResponse();
-		PrintWriter printWriter;
-		try {
-			printWriter = response.getWriter();
-			printWriter.write(content);
-			printWriter.flush();
-			printWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
-	
+	private int hdid;//用于审批酒店修改
+	private int state;//用于审批酒店修改，结果
 
-	
+	/**
+	 * 加载修改酒店信息界面
+	 * @return
+	 */
 	public String modifyHotel(){
 		Map session = ActionContext.getContext().getSession();
 		Hotel myHotel = (Hotel)session.get("myHotel");
@@ -72,16 +58,22 @@ public class HotelAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
+	/**
+	 * 加载个人主页界面
+	 * @return
+	 */
 	public String personalHome(){
 		Map session = ActionContext.getContext().getSession();
 		User user = (User) session.get("user");
-		List<Order> orders = orderService.getOrder(user.getUid());
+		List<Order> orders = orderService.getOrderByUid(user.getUid());
 		int consumeSum = 0;
 		for(Order order : orders){
-			if (order.getIs_vip() == 1) {
-				consumeSum += order.getPrice();
-			}else {
-				consumeSum += order.getVip_price();
+			if (order.getState() == OrderState.OUT.getValue()) {
+				if (order.getIs_vip() == 1) {
+					consumeSum += order.getPrice();
+				}else {
+					consumeSum += order.getVip_price();
+				}
 			}
 		}
 		Hotel myHotel = hotelService.getHotelByUid(user.getUid());
@@ -92,20 +84,10 @@ public class HotelAction extends ActionSupport{
 		return SUCCESS;
 	}
 
-	private Hotel handleHotel(Hotel hotel){
-		Hotel hotel1 = new Hotel();
-		hotel1.setCity(hotel.getCity());
-		hotel1.setDescription(hotel.getDescription());
-		hotel1.setEmail(hotel.getEmail());
-		hotel1.setHotel_name(hotel.getHotel_name());
-		hotel1.setId_num(hotel.getId_num());
-		hotel1.setName(hotel.getName());
-		Date date = Calendar.getInstance().getTime();
-		hotel1.setRegister_date(date);
-		hotel1.setStar(hotel.getStar());
-		return hotel1;
-	}
-	
+	/**
+	 * 提交酒店信息修改草稿，等待总经理审批
+	 * @return
+	 */
 	public String updateHotel(){
 		Set<RoomType> rooms = new HashSet<>();
 		if (room1 != null) {
@@ -118,21 +100,26 @@ public class HotelAction extends ActionSupport{
 			rooms.add(room3);
 		}
 		hotel.setRoomTypes(rooms);
-		Hotel h = new Hotel(hotel);
+//		Hotel h = new Hotel(hotel);
 		Map session = ActionContext.getContext().getSession();
 		User user = (User)session.get("user");
-		h.setUser(user);
-		boolean result = hotelService.updateHotelDraft(h);
+		hotel.setUser(user);
+		boolean result = hotelService.saveHotelDraft(hotel);
 		if (result == true) {
 			return SUCCESS;
 		}
 		return ERROR;
 	}
 
+	/**
+	 * 用户提交开店申请
+	 * @return
+	 */
 	public String registerHotel(){
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		User user = (User) session.get("user");
-		Hotel hotel1 = handleHotel(hotel);
+		Hotel hotel1 = new Hotel(hotel);
+		hotel1.setRegister_date(Calendar.getInstance().getTime());
 		hotel1.setUser(user);
 		Set<RoomType> rooms = new HashSet<>();
 		room1.setType(1);
@@ -154,9 +141,38 @@ public class HotelAction extends ActionSupport{
 		}
 	}
 	
+	/**
+	 * 处理总经理审批的酒店信息修改申请
+	 * @return
+	 */
+	public String handleModifyHotel(){
+		HotelDraft hotelDraft = null;
+		Map session = ActionContext.getContext().getSession();
+		List<HotelDraft> hotelDrafts = (List<HotelDraft>) session.get("hotelDrafts");
+		for(HotelDraft hDraft : hotelDrafts){
+			if (hDraft.getHdid() == hdid) {
+				hotelDraft = hDraft;
+				break;
+			}
+		}
+		if (state == 1) {
+			hotelDraft.setState(1);
+		}
+		boolean result = hotelService.updateHotel(hotelDraft);
+		session.remove("hotelDrafts");
+		if ( result == true) {
+			return SUCCESS;
+		}else {
+			return ERROR;
+		}
+	}
 
 
-	public String approveNewHotel(){
+	/**
+	 * 处理总经理审批开店申请的结果
+	 * @return
+	 */
+	public String handleNewHotel(){
 		Map session = ActionContext.getContext().getSession();
 		List<Hotel> hotels = (List<Hotel>) session.get("newHotels");
 		Hotel newHotel = null;
@@ -169,6 +185,7 @@ public class HotelAction extends ActionSupport{
 		}
 		if (newHotel != null) {
 			boolean result = hotelService.approveNewHotel(newHotel);
+			session.remove("newHotels");
 			if (result == true) {
 				return SUCCESS;
 			}
@@ -176,6 +193,10 @@ public class HotelAction extends ActionSupport{
 		return ERROR;
 	}
 	
+	/**
+	 * 加载总经理查看新开酒店界面
+	 * @return
+	 */
 	public String manageNewHotel(){
 		List<Hotel> newHotels = hotelService.getNewHotels();
 		Map session = (Map) ActionContext.getContext().getSession();
@@ -183,18 +204,30 @@ public class HotelAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
+	/**
+	 * 加载总经理查看酒店申请界面
+	 * @return
+	 */
 	public String manageModifyHotel(){
 		List<HotelDraft> hotelDrafts = hotelService.getModifyHotels();
-		Map requst = (Map) ActionContext.getContext().get("request");
-		requst.put("hotelDrafts", hotelDrafts);
+		Map session = (Map) ActionContext.getContext().getSession();
+		session.put("hotelDrafts", hotelDrafts);
 		return SUCCESS;
 	}
 	
+	/**
+	 * 酒店经营数据统计界面
+	 * @return
+	 */
 	public String hotelStatistic(){
 		//TODO 统计数据
 		return SUCCESS;
 	}
 
+	/**
+	 * 用户选择酒店后，显示酒店房间信息
+	 * @return
+	 */
 	public String chooseHotel(){
 		Date in,out;
 		if (inDate != null && outDate != null) {
@@ -211,13 +244,16 @@ public class HotelAction extends ActionSupport{
 		if (expectedCity == null) {
 			expectedCity = Config.DEFAULT_CITY;
 		}
+		
 		Map<String,Object> session = ActionContext.getContext().getSession();
 		session.put("expectedCity", expectedCity);
 		session.put("inDate", in);
 		session.put("outDate",out);
+		session.put("expectedLevel", level);
 		Map<String,Object> request = (Map) ActionContext.getContext().get("request");
 		request.put("cities", City.values());
-		List<Hotel> hotels = hotelService.getHotels(expectedCity);
+		request.put("levels", HotelStar.values());
+		List<Hotel> hotels = hotelService.getHotels(expectedCity,level);
 		if (hotels != null) {
 			request.put("hotels", hotels);
 			return SUCCESS;
@@ -230,8 +266,6 @@ public class HotelAction extends ActionSupport{
 	public Hotel getMyHotel(int uid){
 		return hotelService.getHotelByUid(uid);
 	}
-
-
 
 	public HotelService getHotelService() {
 		return hotelService;
@@ -327,6 +361,22 @@ public class HotelAction extends ActionSupport{
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getHdid() {
+		return hdid;
+	}
+
+	public void setHdid(int hdid) {
+		this.hdid = hdid;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
 	}
 	
 	

@@ -2,6 +2,7 @@ package service.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import constant.OrderState;
 import dao.HotelDAO;
@@ -25,10 +26,11 @@ public class RoomServiceImpl implements RoomService{
 	public boolean checkIn(Order order) {
 		Order o = orderDAO.getById(order.getOid());
 		boolean result = false;
-		if (o != null) {
+		if (o != null) {//已预订的订单
+			System.out.println("已预订订单！");
 			o.setState(OrderState.IN.getValue());			
-			result = orderDAO.update(order);
-		}else {
+			result = orderDAO.update(o);
+		}else {//新建的订单
 			order.setState(OrderState.IN.getValue());
 			if (order.getIs_vip() == 1) {//设置价格
 				order.setPrice(order.getRoom().getRoomType().getVip_price());
@@ -48,8 +50,13 @@ public class RoomServiceImpl implements RoomService{
 	}
 
 	@Override
-	public boolean checkOut(int oid) {
+	public boolean checkOut(int oid, int is_vip) {
 		Order o = orderDAO.getById(oid);
+		o.setIs_vip(is_vip);
+		if (is_vip == 1) {
+			int money = o.getUser().getMoney() - o.getVip_price();
+			o.getUser().setMoney(money);
+		}
 		o.setState(OrderState.OUT.getValue());
 		return orderDAO.update(o);
 	}
@@ -77,19 +84,28 @@ public class RoomServiceImpl implements RoomService{
 		for(RoomType roomType : hotel.getRoomTypes()){
 			for(Room room : roomType.getRooms()){
 				Set<Order> orders = room.getOrders();
+				Set<Order> orders2 = new HashSet<>();
 				for(Order order : orders){
+					boolean isUseless = false;
 					if (order.getOut_date().compareTo(inDate) <= 0) {
-						orders.remove(order);
+//						orders.remove(order);
+						isUseless = true;
 					}else if (order.getIn_date().compareTo(outDate) >= 0) {
-						orders.remove(order);
+//						orders.remove(order);
+						isUseless = true;
 					}
 					if (order.getState() == OrderState.CANCEL.getValue()) {
-						orders.remove(order);
+//						orders.remove(order);
+						isUseless = true;
 					}else if (order.getState() == OrderState.OUT.getValue()) {
-						orders.remove(order);
+//						orders.remove(order);
+						isUseless = true;
+					}
+					if (isUseless == false) {
+						orders2.add(order);
 					}
 				}
-				room.setOrders(orders);
+				room.setOrders(orders2);
 			}
 		}
 		return hotel;

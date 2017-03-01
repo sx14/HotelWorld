@@ -24,7 +24,7 @@ body{
     text-align: center;
     border: 1px #eeeeee solid;
     border-right: 0;
-    height: 380px;
+    height: 320px;
 }
 
 .sx-star-block-right{
@@ -224,10 +224,6 @@ p{
 }
 
 
-.sx-border-top-big{
-
-}
-
 .sx-position-fixed{
     top:0;
     position: fixed;
@@ -296,7 +292,11 @@ a:hover{
 .sx-select{
     padding-left: 10px;
     width: 60px;
-    height: 2em;
+    height: 34px;
+}
+
+input[name="btnInForm"]{
+    width: 100%;!important;
 }
 
 

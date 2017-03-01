@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import constant.OrderState;
+
 
 @Entity
 @Table(name="room_type",schema="hotel_world")
@@ -35,6 +37,40 @@ public class RoomType {
 	private File img;
 	private String imgFileName;
 	private String imgContentType;
+	
+	@Transient
+	public int getTimes(){
+		int sum = 0;
+		if (rooms != null) {
+			for(Room room : rooms){
+				Set<Order> orders = room.getOrders();
+				if (orders != null) {
+					for(Order order : orders){
+						if (order.getState() == OrderState.OUT.getValue()) {
+							sum ++;
+						}
+					}
+				}
+			}
+			
+		}
+		return sum;
+	}
+	
+	public RoomType(RoomDraft draft,RoomType type) {
+		this.capacity = type.getCapacity();
+		this.hotel = type.getHotel();
+		this.image = draft.getImage();
+		this.num = type.getNum();
+		this.price = draft.getPrice();
+		this.tid = type.getTid();
+		this.type = type.getType();
+		this.vip_price = draft.getVip_price();
+		this.rooms = type.getRooms();
+	}
+	
+	public RoomType() {
+	}
 	
 	@Transient
 	public List<Room> getEmptyRooms(int num){
@@ -165,6 +201,9 @@ public class RoomType {
 			break;
 		case 2:
 			type = "双"+type;
+			break;
+		case 3:
+			type = "三"+type;
 			break;
 		default:
 			type = capacity + type;
