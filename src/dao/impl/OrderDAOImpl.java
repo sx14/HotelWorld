@@ -6,6 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+
+import com.sun.scenario.effect.Merge;
+
 import dao.OrderDAO;
 import model.Order;
 
@@ -55,7 +58,7 @@ public class OrderDAOImpl implements OrderDAO{
 	public boolean save(Order order) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		session.save(order);
+		session.save(session.merge(order));
 		transaction.commit();
 		session.close();
 		return true;
@@ -80,7 +83,7 @@ public class OrderDAOImpl implements OrderDAO{
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
 		for(Order order : orders){
-			session.save(order);
+			session.save(session.merge(order));
 		}
 		transaction.commit();
 		session.close();

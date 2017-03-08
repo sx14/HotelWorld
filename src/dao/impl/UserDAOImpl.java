@@ -5,6 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+
+import constant.UserRole;
 import dao.UserDAO;
 import model.User;
 
@@ -38,6 +40,15 @@ public class UserDAOImpl implements UserDAO{
 		}
 		session.close();
 		return null;
+	}
+	@Override
+	public boolean remove(User user) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		session.delete(user);
+		transaction.commit();
+		session.close();
+		return true;
 	}
 	
 	

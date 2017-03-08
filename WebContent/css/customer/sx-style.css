@@ -2,7 +2,18 @@
     float:right !important;
 }
 
+.sx-vertical-line-fix{
+	border-right: #eeeeee;
+    border-right-width: 1px;
+    border-right-style: solid;
+    height: 140px;
+    /*height: auto;*/
+}
 
+.sx-block{
+    border-right:solid thin #eeeeee;
+    padding: 5px 10px 5px 10px;
+}
 
 nav{
     margin-bottom: 0 !important;
@@ -73,7 +84,8 @@ body{
     border-right: #eeeeee;
     border-right-width: 1px;
     border-right-style: solid;
-    height: 140px;
+    /*height: 140px;*/
+    height: auto;
 }
 
 .sx-media-height{

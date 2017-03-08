@@ -1,0 +1,45 @@
+.sx-col-right{
+    padding-right: 0px !important;
+}
+
+.sx-col-left{
+    padding-left: 0px !important;
+}
+
+.sx-right{
+    float: right;
+}
+
+
+.table{
+    margin-bottom: 0; !important;
+}
+
+.sx-head{
+    border-left-color: #2b669a;
+    border-left-style: solid;
+    border-left-width: thick;
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
+
+.sx-block{
+    border-right:solid thin #eeeeee;
+    padding: 5px 10px 5px 10px;
+}
+
+.panel{
+    box-shadow: .5px .5px .5px silver;
+}
+
+.sx-big-button{
+    width: 80% !important;
+    margin-top: 10px;
+}
+
+.sx-margin-left{
+    margin-left: 20px;!important;
+}
+

@@ -64,15 +64,19 @@
 		</action>
 		
 		<action name="updateHotel" class="action.HotelAction" method="updateHotel">
-			<result name="success">personalHome</result>
+			<result name="success" type="redirect">personalHome</result>
 		</action>
 		
 		<action name="chargeVIP" class="action.UserAction" method="chargeVIP">
-			<result name="success">register_success.jsp</result>
+			<result name="success" type="redirect">personalHome</result>
 		</action>
 		
 		<action name="manageRoom" class="action.RoomAction" method="manageRoom">
 			<result name="success">manage_room.jsp</result>
+		</action>
+
+		<action name="searchRoom" class="action.RoomAction" method="searchRoom">
+			<result name="success">manage_reserve_room.jsp</result>
 		</action>
 		
 		<action name="handleOrder" class="action.OrderAction" method="handleOrder">

@@ -1,8 +1,8 @@
 package constant;
 public enum HotelStar {
 	
-	N(0,"不限",0);
-//	A(1,"A级",500),B(2,"B级",300),C(3,"C级",100);
+	N(0,"不限",0),
+	A(1,"A级",500),B(2,"B级",300),C(3,"C级",100);
 	
 	private int value;
 	private String name;

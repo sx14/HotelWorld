@@ -31,7 +31,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-reserve-room.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
@@ -59,7 +58,7 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li><a href="chooseHotel">酒店信息</a></li>
-		                <li class="active"><a href="personalHome">查看订单</a></li>
+		                <li class="active"><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>

@@ -57,18 +57,17 @@ public class HotelServiceImpl implements HotelService{
 		String storeRoomPath = ServletActionContext.getServletContext().getRealPath("/"+roomPath);
 		for(RoomType roomType : hotel.getRoomTypes()){
 			if (roomType.getImg() != null) {
-				roomType.setImgFileName(roomPath+"/"+roomType.getTid()+roomType.getImgFileName());
-				FileHelper.saveFile(roomType.getImg(),roomType.getImgFileName(), storeRoomPath);
-				roomType.setImage(roomType.getImgFileName());
+				FileHelper.saveFile(roomType.getImg(),roomType.getTid()+roomType.getImgFileName(), storeRoomPath);
+				roomType.setImage(roomPath+"/"+roomType.getTid()+roomType.getImgFileName());
 			}
 			RoomDraft roomDraft = new RoomDraft(roomType);
 			roomDraft.setHotelDraft(hotelDraft);
 			roomDrafts.add(roomDraft);
 		}
 		String storeHotelPath = ServletActionContext.getServletContext().getRealPath("/"+hotelPath);
-		FileHelper.saveFile(hotel.getImgS(), hotel.getHid()+hotel.getImgSFileName(), storeHotelPath);
-		FileHelper.saveFile(hotel.getImgM(), hotel.getHid()+hotel.getImgMFileName(), storeHotelPath);
-		FileHelper.saveFile(hotel.getImgB(), hotel.getHid()+hotel.getImgBFileName(), storeHotelPath);
+		FileHelper.saveFile(hotel.getImgS(), "s"+hotel.getHid()+hotel.getImgSFileName(), storeHotelPath);
+		FileHelper.saveFile(hotel.getImgM(), "m"+hotel.getHid()+hotel.getImgMFileName(), storeHotelPath);
+		FileHelper.saveFile(hotel.getImgB(), "b"+hotel.getHid()+hotel.getImgBFileName(), storeHotelPath);
 		hotelDraft.setImage_small(hotelPath + "/s" + hotel.getHid() + hotel.getImgSFileName());
 		hotelDraft.setImage_mid(hotelPath + "/m" + hotel.getHid() + hotel.getImgMFileName());
 		hotelDraft.setImage_big(hotelPath + "/b" + hotel.getHid() + hotel.getImgBFileName());

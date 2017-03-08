@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring" />
+	<package name="default" extends="struts-default">
+		<action name="test" class="action.TestAction" method="execute">
+			<result name="success">test.jsp</result>
+		</action>
+		<action name="registerQuickly" class="action.UserAction" method="registerQuickly">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="login" class="action.UserAction" method="login">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="chooseHotel" class="action.HotelAction" method="chooseHotel">
+			<result name="success">choose_hotel.jsp</result>
+		</action>
+		
+		<action name="registerHotel" class="action.HotelAction" method="registerHotel">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="manageNewHotel" class="action.HotelAction" method="manageNewHotel">
+			<result name="success">manage_hotel_new.jsp</result>
+		</action>
+		
+		<action name="manageModifyHotel" class="action.HotelAction" method="manageModifyHotel">
+			<result name="success">manage_hotel_modify.jsp</result>
+		</action>
+		
+		<action name="hotelStatitic" class="action.HotelAction" method="hotelStatistic">
+			<result name="success">manage_hotel_statistic.jsp</result>
+		</action>
+		
+		<action name="handleNewHotel" class="action.HotelAction" method="handleNewHotel">
+			<result name="success" type="redirect">manageNewHotel</result>
+		</action>
+		
+		<action name="handleModifyHotel" class="action.HotelAction" method="handleModifyHotel">
+			<result name="success" type="redirect">manageModifyHotel</result>
+		</action>
+		
+		<action name="personalHome" class="action.HotelAction" method="personalHome">
+			<result name="success">personal_home.jsp</result>
+		</action>
+		
+		<action name="registerVIP" class="action.UserAction" method="registerVIP">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="modifyHotel" class="action.HotelAction" method="modifyHotel">
+			<result name="success">modify_hotel.jsp</result>
+		</action>
+		
+		<action name="updateHotel" class="action.HotelAction" method="updateHotel">
+			<result name="success">personalHome</result>
+		</action>
+		
+		<action name="chargeVIP" class="action.UserAction" method="chargeVIP">
+			<result name="success">register_success.jsp</result>
+		</action>
+		
+		<action name="manageRoom" class="action.RoomAction" method="manageRoom">
+			<result name="success">manage_room.jsp</result>
+		</action>
+		
+		<action name="handleOrder" class="action.OrderAction" method="handleOrder">
+			<result name="success" type="redirect">manageRoom</result>
+		</action>
+		
+		<action name="chooseRoom" class="action.RoomAction" method="chooseRoom">
+			<result name="success">choose_room.jsp</result>
+		</action>
+		
+		<action name="reserveRoom" class="action.RoomAction" method="reserveRoom">
+			<result name="success">reserve_room.jsp</result>
+		</action>
+		
+		<action name="saveOrder" class="action.OrderAction" method="saveOrder">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="cancelOrder" class="action.OrderAction" method="cancelOrder">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="showOrder" class="action.OrderAction" method="showOrder">
+			<result name="success">show_order.jsp</result>
+		</action>
+		
+		<action name="saveComment" class="action.OrderAction" method="saveComment">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="logout" class="action.UserAction" method="logout">
+			<result name="success">/</result>
+		</action>
+		
+		<!-- =============ajax============= -->
+		<action name="checkExists" class="action.UserAction" method="checkExists">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+
+	</package>
+</struts>

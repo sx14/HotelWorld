@@ -19,7 +19,7 @@
           <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/WebContent/WEB-INF/web.xml" />
         </descriptors>
         <webroots>
-          <root url="file://$MODULE_DIR$/web" relative="/" />
+          <root url="file://$MODULE_DIR$/WebContent" relative="/" />
         </webroots>
       </configuration>
     </facet>
@@ -68,10 +68,39 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/hibernate" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/hibernate" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/spring" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/lib/spring" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/lib/spring" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/lib/spring" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/strust" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/strust" recursive="false" />
+      </library>
+    </orderEntry>
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 8.0.36" level="application_server_libraries" />
-    <orderEntry type="library" name="hibernate" level="project" />
-    <orderEntry type="library" name="spring-jdbc-4.3.5.RELEASE" level="project" />
-    <orderEntry type="library" name="struts" level="project" />
-    <orderEntry type="library" name="spring-jdbc-4.3.5.RELEASE" level="project" />
   </component>
 </module>

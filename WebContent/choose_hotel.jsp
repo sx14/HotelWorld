@@ -51,7 +51,7 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
-		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -209,7 +209,7 @@
       		out.println("</div>");
       		out.println("<div class=\"media-body\">");
       		out.println("<div class=\"row\">");
-      		out.println("<div class=\"col-md-6 sx-vertical-line\">");
+      		out.println("<div class=\"col-md-6 sx-vertical-line-fix\">");
       		out.println("<h4 class=\"media-heading\"><span class=\"label sx-label-hotel\">"+(i+1)+"</span><a href=\"chooseRoom?hid="+hotel.getHid()+"\">"+hotel.getCity()+hotel.getHotel_name()+"</a><span class=\"label label-danger\">"+hotel.getLevel()+"</span></h4>");
       		out.println("<p>"+hotel.getDescription()+"</p>");
       		out.println("<p class=\"sx-small-grey\">“"+hotel.getGoodComment()+"”</p>");

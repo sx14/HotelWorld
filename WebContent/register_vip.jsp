@@ -31,7 +31,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-hotel-register.css" rel="stylesheet">
 	<link href="css/customer/sx-style.css" rel="stylesheet">
 </head>
@@ -53,7 +52,7 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li><a href="chooseHotel">酒店信息</a></li>
-		                <li class="active"><a href="personalHome">查看订单</a></li>
+		                <li class="active"><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -83,7 +82,7 @@
             <h4><strong>会员注册</strong></h4>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal" action="registerVIP" method="post" enctype="multipart/form-data">
+            <form class="form-horizontal" enctype="multipart/form-data" id="vipForm">
                 <div class="form-group">
                     <label class="col-md-4 control-label">用户名</label>
                     <div class="col-md-4">
@@ -158,7 +157,7 @@
                 <div class="form-group">
                     <div class="col-md-4 col-md-offset-4 sx-mid">
                         <input type="reset" class="btn btn-default" value="重置">
-                        <input type="submit" class="btn btn-primary" value="提交">
+                        <input class="btn btn-primary" value="提交" onclick="confirmAndSubmit('vipForm','registerVIP')">
                         <a class="sx-right-float sx-a">注销会员</a>
                     </div>
                 </div>
@@ -203,6 +202,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/customer/sx-ajax.js"></script>
 <script src="../../assets/js/docs.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>

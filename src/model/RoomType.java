@@ -88,7 +88,7 @@ public class RoomType {
 	public int getEmptyRoomNum(){
 		int sum = 0;
 		for(Room room : rooms){
-			if (room.getOrders().size() == 0) {
+			if (room.getState().equals("空闲")) {
 				sum ++;
 			}
 		}

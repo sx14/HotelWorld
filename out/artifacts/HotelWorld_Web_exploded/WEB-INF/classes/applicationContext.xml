@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"    
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+        xmlns:p="http://www.springframework.org/schema/p"  
+        xmlns:aop="http://www.springframework.org/schema/aop"   
+        xmlns:context="http://www.springframework.org/schema/context"  
+        xmlns:jee="http://www.springframework.org/schema/jee"  
+        xmlns:tx="http://www.springframework.org/schema/tx"  
+        xsi:schemaLocation="    
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.2.xsd  
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+    
+    <!-- 配置hibernate5 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<!-- 设置为close使Spring容器关闭同时数据源能够正常关闭，以免造成连接泄露 --> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/hotel_world?useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+		<property name="username" value="root"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQL5Dialect
+				</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="model" />
+		<!-- 配置需要扫描的包路径，在该包下，所有的类注解配置都会被扫描 -->
+	</bean>
+	<!-- 配置hibernate5完成 -->
+		
+    <!-- 依赖注入 -->
+    
+    <!-- ===========================visa=========================== -->
+    <bean id="testAction" class="action.TestAction" scope="prototype">
+    	<property name="testService" ref="testService"></property>
+    </bean>
+    
+    <bean id="testService" class="service.impl.TestServiceImpl" scope="singleton">
+    	<property name="visaDAO" ref="visaDAOImpl"></property>
+    </bean>
+    
+    <bean id="visaDAOImpl" class="dao.impl.VisaDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================user=========================== -->
+    <bean id="userAction" class="action.UserAction" scope="prototype">
+    	<property name="userService" ref="userService"></property>
+    </bean>
+    
+    <bean id="userService" class="service.impl.UserServiceImpl" scope="singleton">
+    	<property name="userDAO" ref="userDAOImpl"></property>
+    	<property name="visaDAO" ref="visaDAOImpl"></property>
+    </bean>
+    
+	<bean id="userDAOImpl" class="dao.impl.UserDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================hotel=========================== -->
+    <bean id="hotelAction" class="action.HotelAction" scope="prototype">
+    	<property name="hotelService" ref="hotelService"></property>
+    	<property name="orderService" ref="orderService"></property>
+    	<property name="userService" ref="userService"></property>
+    </bean>
+    
+    <bean id="hotelService" class="service.impl.HotelServiceImpl" scope="singleton">
+    	<property name="hotelDAO" ref="hotelDAOImpl"></property>
+    	<property name="hotelDraftDAO" ref="hotelDraftDAOImpl"></property>
+    	<property name="roomDAO" ref="roomDAOImpl"></property>
+    </bean>
+    
+    <bean id="hotelDAOImpl" class="dao.impl.HotelDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <bean id="hotelDraftDAOImpl" class="dao.impl.HotelDraftDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================order=========================== -->
+    
+    <bean id="orderService" class="service.impl.OrderServiceImpl" scope="singleton">
+    	<property name="orderDAO" ref="orderDAOImpl"></property>
+    </bean>
+    
+    <bean id="orderDAOImpl" class="dao.impl.OrderDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================room=========================== -->
+    <bean id="roomAction" class="action.RoomAction" scope="prototype">
+    	<property name="roomService" ref="roomService"></property>
+    </bean>
+    
+    <bean id="roomService" class="service.impl.RoomServiceImpl" scope="singleton">
+    	<property name="roomDAO" ref="roomDAOImpl"></property>
+    	<property name="hotelDAO" ref="hotelDAOImpl"></property>
+    	<property name="orderDAO" ref="orderDAOImpl"></property>
+    	<property name="userDAO" ref="userDAOImpl"></property>
+    </bean>
+    
+    <bean id="roomDAOImpl" class="dao.impl.RoomDAOImpl" scope="singleton">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

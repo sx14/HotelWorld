@@ -13,8 +13,8 @@
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
     Hotel hotel = (Hotel)session.getAttribute("hotel");
-    Date inDate = (Date)request.getAttribute("inDate");
-    Date outDate = (Date)request.getAttribute("outDate");
+    Date inDate = (Date)session.getAttribute("inDate");
+    Date outDate = (Date)session.getAttribute("outDate");
     
 %>
 
@@ -41,8 +41,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
-    <link href="css/customer/sx-update-room.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
 </head>
@@ -77,23 +75,34 @@
     <div class="jumbotron sx-jumbotron">
     </div>
 
+
     <div class="panel panel-default">
-        <div class="panel-body">
-            <form class="form-horizontal">
+        <div class="panel-body row">
+            <form class="form-horizontal col-md-7 sx-vertical-line" method="get" action="manageRoom">
                 <div class="form-group">
-                    <label class="control-label col-md-3">日期</label>
+                    <label class="control-label col-md-2">日期</label>
                     <%
                     	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                     %>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <input name="inDate" type="date" class="form-control" value="<%=format.format(inDate) %>">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <input name="outDate" type="date" class="form-control" value="<%=format.format(outDate) %>">
                     </div>
                     <input type="submit" class="btn btn-primary" value="搜索">
                 </div>
             </form>
+
+			<form class="form-horizontal col-md-5" method="get" action="searchRoom">
+				<div class="form-group">
+					<label class="control-label col-md-3">预订手机号</label>
+					<div class="col-md-6">
+						<input type="number" class="form-control" name="phone">
+					</div>
+					<input type="submit" class="btn btn-primary" value="搜索预订房间">
+				</div>
+			</form>
         </div>
     </div>
     

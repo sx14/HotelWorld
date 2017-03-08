@@ -1,10 +1,10 @@
 package service.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import com.sun.org.apache.xpath.internal.operations.Or;
 import constant.OrderState;
+import constant.UserRole;
 import dao.HotelDAO;
 import dao.OrderDAO;
 import dao.RoomDAO;
@@ -15,6 +15,7 @@ import model.Room;
 import model.RoomType;
 import model.User;
 import service.RoomService;
+
 
 public class RoomServiceImpl implements RoomService{
 	private RoomDAO roomDAO;
@@ -41,8 +42,12 @@ public class RoomServiceImpl implements RoomService{
 			User user = order.getUser();
 			user.setUsername(user.getName());
 			user.setRegister_date(Calendar.getInstance().getTime());
-			userDAO.saveOrUpdate(order.getUser());
-			User u = userDAO.get(order.getUser().getPhone());
+			user.setRole(UserRole.TEMP.getValue());
+			User u = userDAO.get(user.getPhone());
+			if (u == null) {
+				userDAO.saveOrUpdate(user);
+				u = userDAO.get(order.getUser().getPhone());
+			}
 			order.setUser(u);
 			result = orderDAO.save(order);
 		}
@@ -57,6 +62,9 @@ public class RoomServiceImpl implements RoomService{
 			int money = o.getUser().getMoney() - o.getVip_price();
 			o.getUser().setMoney(money);
 		}
+		if (o.getUser().getRole() == UserRole.TEMP.getValue()) {
+			
+		}
 		o.setState(OrderState.OUT.getValue());
 		return orderDAO.update(o);
 	}
@@ -67,7 +75,34 @@ public class RoomServiceImpl implements RoomService{
 		order.setState(OrderState.CANCEL.getValue());
 		return orderDAO.update(order);
 	}
-	
+
+	@Override
+	public Hotel getReservedRooms(Hotel hotel, String phone) {
+		Hotel h = new Hotel(hotel);
+		Set<RoomType> roomTypes = h.getRoomTypes();
+		for(RoomType roomType : roomTypes){
+			Set<Room> rooms = roomType.getRooms();
+			Set<Room> rSet = new HashSet<>();
+			for(Room room : rooms){
+				Set<Order> orders = room.getOrders();
+				boolean reserved = false;
+				for(Order order : orders){
+					if (phone != null){
+						if (order.getUser().getPhone().equals(phone)){
+							reserved = true;
+							break;
+						}
+					}
+				}
+				if (reserved == true) {
+					rSet.add(room);
+				}
+			}
+			roomType.setRooms(rSet);
+		}
+		return h;
+	}
+
 	@Override
 	public Hotel getRoomByHid(int hid, Date inDate, Date outDate) {
 		Hotel hotelRow = hotelDAO.getByHid(hid).get(0);

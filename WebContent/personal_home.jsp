@@ -40,7 +40,6 @@
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/carousel.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
@@ -68,20 +67,8 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li><a href="chooseHotel">酒店信息</a></li>
-		                <li class="active"><a href="personalHome">查看订单</a></li>
+		                <li class="active"><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
-		                <li class="dropdown">
-		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-		                    <ul class="dropdown-menu">
-		                        <li><a href="#">Action</a></li>
-		                        <li><a href="#">Another action</a></li>
-		                        <li><a href="#">Something else here</a></li>
-		                        <li role="separator" class="divider"></li>
-		                        <li class="dropdown-header">Nav header</li>
-		                        <li><a href="#">Separated link</a></li>
-		                        <li><a href="#">One more separated link</a></li>
-		                    </ul>
-		                </li>
 		            </ul>
 		        </div><!--/.nav-collapse -->
 		    </div>
@@ -93,10 +80,10 @@
     <div class="jumbotron sx-jumbotron">
     </div>
 
-    <div>
-        <div>
-            <div class="col-md-9 sx-col-left">
-            <%
+    <div class="row">
+        <div class="col-md-9">
+            <div class="sx-col-left">
+            	<%
             	if(myHotel != null){
             		out.println("<div class=\"panel panel-default\">");
             		out.println("<div class=\"panel-heading\">");
@@ -173,40 +160,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 sx-col-right sx-right sx-content-center">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    	<%
-                    		if(user.getImage() == null){
-                    			out.println("<img src=\"img/head/default_user.jpg\" class=\"img-rounded\" height=\"200\" width=\"200\">");
-                    		}else{
-                    			out.println("<img src=\""+user.getImage()+"\" class=\"img-rounded\" height=\"200\" width=\"200\">");
-                    		}
-                    	%>
-                        
-                        <h3><strong><%=user.getUsername() %></strong></h3>
-                        <%
-                        	if(user.getEmail() != null){
-                        		out.println("<p>"+user.getEmail()+"</p>");
-                        	}
-                        %>
-                        
-                        <%
-                        	if(user.getVisa() != null){
-                        		out.println("<label><span class=\"label label-success\">认证会员</span>"+user.getHiddenName()+"</label>");
-                        		out.println("<p><a class=\"btn btn-default sx-big-button\" role=\"button\" href=\"register_vip.jsp\">修改个人信息</a></p>");
-                        	}else{
-                        		out.println("<label><span class=\"label label-danger\">普通用户</span>"+user.getHiddenPhone()+"</label>");
-                        		out.println("<p><a class=\"btn btn-default sx-big-button\" role=\"button\" href=\"register_vip.jsp\">点我成为会员</a></p>");
-                        	}
-                        	if(myHotel == null){
-	                        	out.println("<a href=\"register_hotel.jsp\" class=\"control-label\">想开店？点我注册&raquo;</a>");
-                        	}
-                        %>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-9 sx-col-left">
+
+            <div class="sx-col-left">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="col-md-4 sx-col-left sx-block">
@@ -249,6 +204,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-3">
+            <div class="sx-col-right sx-right sx-content-center">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                    	<%
+                    		if(user.getImage() == null){
+                    			out.println("<img src=\"img/head/default_user.jpg\" class=\"img-rounded\" height=\"200\" width=\"200\">");
+                    		}else{
+                    			out.println("<img src=\""+user.getImage()+"\" class=\"img-rounded\" height=\"200\" width=\"200\">");
+                    		}
+                    	%>
+                        
+                        <h3><strong><%=user.getUsername() %></strong></h3>
+                        <%
+                        	if(user.getEmail() != null){
+                        		out.println("<p>"+user.getEmail()+"</p>");
+                        	}
+                        %>
+                        
+                        <%
+                        	if(user.getVisa() != null){
+                        		out.println("<label><span class=\"label label-success\">认证会员</span>"+user.getHiddenName()+"</label>");
+                        		out.println("<p><a class=\"btn btn-default sx-big-button\" role=\"button\" href=\"register_vip.jsp\">修改个人信息</a></p>");
+                        	}else{
+                        		out.println("<label><span class=\"label label-danger\">普通用户</span>"+user.getHiddenPhone()+"</label>");
+                        		out.println("<p><a class=\"btn btn-default sx-big-button\" role=\"button\" href=\"register_vip.jsp\">点我成为会员</a></p>");
+                        	}
+                        	if(myHotel == null){
+	                        	out.println("<a href=\"register_hotel.jsp\" class=\"control-label\">想开店？点我注册&raquo;</a>");
+                        	}
+                        %>
+                    </div>
+                </div>
+            </div>       
         </div>
     </div>
 </div> <!-- /container -->

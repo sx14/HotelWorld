@@ -69,7 +69,7 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
-		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>

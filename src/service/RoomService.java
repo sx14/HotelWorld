@@ -12,4 +12,5 @@ public interface RoomService {
 	public boolean checkIn(Order order);
 	public boolean checkOut(int oid, int is_vip);
 	public boolean cancelReserve(int oid);
+	public Hotel getReservedRooms(Hotel hotel,String phone);
 }

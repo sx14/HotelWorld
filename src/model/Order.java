@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import constant.OrderState;
+import javassist.expr.Cast;
 
 @Entity
 @Table(name="order_o",schema="hotel_world")
@@ -128,7 +129,7 @@ public class Order {
 		this.comment_head = comment_head;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="uid")
 	public User getUser() {
 		return user;

@@ -36,7 +36,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-choose-room.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
@@ -68,7 +67,7 @@
 		        <div id="navbar" class="navbar-collapse collapse">
 		            <ul class="nav navbar-nav" style="float:right">
 		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
-		                <li><a href="personalHome">查看订单</a></li>
+		                <li><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
 		                <li class="dropdown">
 		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -112,7 +111,7 @@
           		out.println("<tr>");
           		out.println("<td class=\"media sx-media-inTable sx-content-center\">");
           		out.println("<div class=\"media-left\">");
-          		out.println("<img class=\"sx-img-small\" src=\"img/hotel1.jpg\">");
+          		out.println("<img class=\"sx-img-small\" src=\""+roomType.getImage()+"\">");
           		out.println("</div>");
           		out.println("<div class=\"media-body\">");
           		out.println("<div class=\"row\">");
@@ -173,10 +172,10 @@
       </div>
       <div class="col-md-4 sx-content-center sx-border-blue sx-shadow sx-remove-padding">
         <div class="row">
-          <img src="../img/hotel-mid-1.jpg" class="sx-img-star-hotel">
+          <img src="<%=hotel.getImage_mid() %>" class="sx-img-star-hotel">
           <div class="sx-padding-all">
             <p class="sx-big-blue"><%=hotel.getCity()+hotel.getHotel_name()%></p>
-            <p>地址：江苏省南京市鼓楼区汉口路22号</p>
+            <p>地址：<%=(hotel.getCity()+"市"+hotel.getDescription()) %></p>
             <p><span class="sx-big-blue"><%=String.format("%.1f",hotel.getAvgStar() ) %></span>/5分</p>
             <p>￥<span class="sx-big-red"><%=hotel.getLowestPrice() %></span>起</p>
             <p><span class="sx-small-blue"><%=hotel.getCommentNum() %></span>条评价</p>
