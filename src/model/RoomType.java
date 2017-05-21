@@ -2,9 +2,10 @@ package model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,8 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 
 import constant.OrderState;
 
@@ -45,9 +48,17 @@ public class RoomType {
 			for(Room room : rooms){
 				Set<Order> orders = room.getOrders();
 				if (orders != null) {
+					Calendar calendar = Calendar.getInstance();
+					int day = calendar.get(Calendar.DAY_OF_MONTH);
+					calendar.add(Calendar.DAY_OF_MONTH, 0-day);
+					Date monthStart = calendar.getTime();
 					for(Order order : orders){
-						if (order.getState() == OrderState.OUT.getValue()) {
-							sum ++;
+						if (order.getIn_date().before(monthStart)) {
+							continue;
+						}else {
+							if (order.getState() == OrderState.OUT.getValue()) {
+								sum ++;
+							}
 						}
 					}
 				}
@@ -96,6 +107,7 @@ public class RoomType {
 	}
 	
 	@OneToMany(mappedBy="roomType",cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@OrderBy("num ASC")
 	public Set<Room> getRooms() {
 		return rooms;
 	}

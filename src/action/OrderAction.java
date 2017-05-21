@@ -34,7 +34,6 @@ public class OrderAction extends ActionSupport{
 	private Order order;
 	private String operate;
 	private int rid;
-	
 	private int oid;
 	private InputStream ajax;
 	
@@ -108,10 +107,6 @@ public class OrderAction extends ActionSupport{
 		return null;
 	}
 	
-	private void addCustomer(Customer customer,Order order){
-		order.addCustomer(customer);
-	}
-	
 	public String handleOrder(){
 		boolean result = false;
 		Map session = ActionContext.getContext().getSession();
@@ -135,7 +130,7 @@ public class OrderAction extends ActionSupport{
 			order.setRoom(hotel.getRoom(rid));
 			result = roomService.checkIn(order);
 		}else if (operate.equals(OrderOperate.OUT.getValue())) {
-			result = roomService.checkOut(order.getOid(), 0);
+			result = roomService.checkOut(order.getOid());
 		}else if (operate.equals(OrderOperate.CANCEL.getValue())) {
 			result = roomService.cancelReserve(order.getOid());
 		}else {
@@ -146,6 +141,10 @@ public class OrderAction extends ActionSupport{
 		}else {
 			return ERROR;
 		}
+	}
+
+	private void addCustomer(Customer customer,Order order){
+		order.addCustomer(customer);
 	}
 	
 	private void ajax(String content){

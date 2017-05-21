@@ -6,6 +6,6 @@ public class Config {
 	public static final int MONEY_IN_VISA = 10000;
 	public static final String DEFAULT_PASSWORD = "123123";
 	public static final String DEFAULT_COMMENT = "快来成为第一个评价的人哦";
-	public static final int VIP_MONEY_LEAST = 10;
+	public static final int VIP_MONEY_LEAST = 1000;
 }
 

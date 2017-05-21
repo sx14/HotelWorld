@@ -45,18 +45,18 @@
 
           <div class="masthead clearfix">
             <div class="inner">
-              <h3 class="masthead-brand">Hotel World</h3>
+              <h3 class="masthead-brand">Hostel World</h3>
               <nav>
                 <ul class="nav masthead-nav">
                   <li class="active"><a href="#">登录</a></li>
-                  <li><a href="register.jsp">快速注册</a></li>
+                  <li><a href="register">快速注册</a></li>
                 </ul>
               </nav>
             </div>
           </div>
 
           <div class="inner cover">
-            <h1 class="cover-heading">Hotel World</h1>
+            <h1 class="cover-heading">Hostel World</h1>
             <p class="lead">专注酒店三十年，始于1980</p>
             <form id="loginForm">
               <div class="sx-content-center">
@@ -64,7 +64,7 @@
                   <div class="col-md-4 col-md-offset-4 form-horizontal">
                     <input name="user.phone" type="tel" class="form-control sx-cover-form" placeholder="手机号码">
                     <input name="user.password" type="password" class="form-control sx-cover-form" placeholder="密码">
-                    <input class="btn btn-default sx-cover-form sx-cover-button" value="登录" onclick="login()">
+                    <input class="btn btn-default sx-cover-form sx-cover-button" value="登录" onclick="login()" type="button">
                   </div>
                  </div>
               </div>
@@ -73,7 +73,7 @@
 
           <div class="mastfoot">
             <div class="inner">
-              <p>Hotel World 全国连锁酒店</p>
+              <p>Hostel World 全国连锁酒店</p>
             </div>
           </div>
 

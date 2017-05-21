@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -53,8 +55,19 @@ public class HotelAction extends ActionSupport{
 		if (myHotel == null) {
 			User user = (User)session.get("user");
 			myHotel = hotelService.getHotelByUid(user.getUid());
-			session.put("myHotel", hotel);
+			session.put("myHotel", myHotel);
 		}
+		return SUCCESS;
+	}
+	
+	public String hotelHome(){
+		Map session = ActionContext.getContext().getSession();
+		User user = (User) session.get("user");
+		Hotel myHotel = hotelService.getHotelByUid(user.getUid());
+		String statistic = hotelService.getStatisticData(myHotel);
+		Map request = (Map) ActionContext.getContext().get("request");
+		session.put("myHotel", myHotel);
+		request.put("statistic", statistic);
 		return SUCCESS;
 	}
 	
@@ -80,7 +93,7 @@ public class HotelAction extends ActionSupport{
 		Map request = (Map) ActionContext.getContext().get("request");
 		request.put("orders", orders);
 		request.put("consumeSum", consumeSum);
-		session.put("myHotel",myHotel);
+		session.put("myHotel", myHotel);
 		return SUCCESS;
 	}
 
@@ -132,6 +145,7 @@ public class HotelAction extends ActionSupport{
 		rooms.add(room2);
 		rooms.add(room3);
 		hotel1.setRoomTypes(rooms);
+		user.setName(hotel1.getName());
 		boolean result = hotelService.registerHotel(hotel1);
 		System.out.println("register hotel :" + result);
 		if (result == true) {
@@ -156,7 +170,9 @@ public class HotelAction extends ActionSupport{
 			}
 		}
 		if (state == 1) {
-			hotelDraft.setState(1);
+			hotelDraft.setState(ApplyState.PASS.getValue());
+		}else{
+			hotelDraft.setState(ApplyState.UNPASS.getValue());
 		}
 		boolean result = hotelService.updateHotel(hotelDraft);
 		session.remove("hotelDrafts");
@@ -216,13 +232,38 @@ public class HotelAction extends ActionSupport{
 	}
 	
 	/**
-	 * 酒店经营数据统计界面
+	 * 加载总经理查看酒店统计数据界面
 	 * @return
 	 */
-	public String hotelStatistic(){
-		//TODO 统计数据
+	public String manageHotelStatistic() {
+		if (expectedCity == null) {
+			expectedCity = Config.DEFAULT_CITY;
+		}
+		Map<String,Object> session = ActionContext.getContext().getSession();
+		session.put("expectedCity", expectedCity);
+		session.put("expectedLevel", level);
+		List<Hotel> hotels = hotelService.getHotels(expectedCity, level);
+		Map request = (Map) ActionContext.getContext().get("request");
+		request.put("hotels", hotels);
+		request.put("cities", City.values());
+		request.put("levels", HotelStar.values());
 		return SUCCESS;
 	}
+	
+	/**
+	 * 展示某个选定酒店的统计数据
+	 * @return
+	 */
+	public String showHotelStatistic(){
+		Hotel hotel = hotelService.getHotelByHid(hid);
+		String statistic = hotelService.getStatisticData(hotel);
+		Map request = (Map) ActionContext.getContext().get("request");
+		Map session = ActionContext.getContext().getSession();
+		session.put("myHotel", hotel);
+		request.put("statistic", statistic);
+		return SUCCESS;
+	}
+	
 
 	/**
 	 * 用户选择酒店后，显示酒店房间信息

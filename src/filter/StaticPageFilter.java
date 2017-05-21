@@ -29,6 +29,7 @@ public class StaticPageFilter implements Filter{
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
 		String path = request.getServletPath();
+		System.out.println("static filter");
 		if (path.equals("/")) {//根目录，静态页面放行
 			return;
 		}else {

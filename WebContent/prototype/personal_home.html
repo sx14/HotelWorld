@@ -121,62 +121,15 @@
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <strong>我的订单</strong>
+                                <strong>本月营业情况</strong>
                             </div>
-                            <div class="panel-body">
-                                <table class="table sx-content-center">
-                                    <tbody>
-                                    <tr>
-                                        <th>南京啦啦啦店</th>
-                                        <td>单人房</td>
-                                        <td>
-                                            <p><span class="label label-default">住</span>2016-09-23</p>
-                                            <p><span class="label label-success">离</span>2016-09-24</p>
-                                        </td>
-                                        <td><strong>￥100</strong></td>
-                                        <td>入住完成</td>
-                                        <td>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">订单详情</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>南京啦啦啦店</th>
-                                        <td>单人房</td>
-                                        <td>
-                                            <p><span class="label label-primary">住</span>2016-09-23</p>
-                                            <p><span class="label label-success">离</span>2016-09-24</p>
-                                        </td>
-                                        <td><strong>￥100</strong></td>
-                                        <td>入住完成</td>
-                                        <td>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="exampleModalLabel" data-whatever="@getbootstrap">订单详情</button>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sx-col-left">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class="col-md-4 sx-col-left sx-block">
-                                    <h4 class="sx-head"><strong>账户余额</strong></h4>
-                                    <hr>
-                                    <h2 class="sx-content-center"><strong>￥20.10</strong></h2>
-                                </div>
-                                <div class="col-md-4 sx-block">
-                                    <h4 class="sx-head"><strong>累计消费</strong></h4>
-                                    <hr>
-                                    <h2 class="sx-content-center"><strong>￥20.10</strong></h2>
-                                </div>
-                                <div class="col-md-4 sx-col-left sx-content-center">
-                                    <h4 class="sx-head"><strong>充值</strong></h4>
-                                    <p><strong>银行卡号</strong>&nbsp;&nbsp;<strong>53259827394824932</strong><p>
-                                    <button type="button" class="btn btn-success sx-right-float" data-toggle="modal" data-target=".bs-example-modal-sm" data-whatever="@getbootstrap">点我充值</button>
+                            <div class="panel-body sx-border-bottom">
+                                <div id="canvas-holder" style="width:100%">
+                                    <canvas id="canvas"></canvas>
                                 </div>
                             </div>
                         </div>
+                        <div class="alert alert-info" role="alert">...</div>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -318,8 +271,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/docs.min.js"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/customer/manage_hotel.js"></script>
+<script src="../js/chart.bundle.js"></script>
+<script>
+    loadGraph(1,1);
+</script>
 </body>
 </html>

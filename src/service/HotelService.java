@@ -14,5 +14,7 @@ public interface HotelService {
 	public boolean updateHotel(HotelDraft hotelDraft);
 	public Hotel getHotelByUid(int uid);
 	public boolean registerHotel(Hotel hotel);
+	public String getStatisticData(Hotel hotel);
+	public Hotel getHotelByHid(int hid);
 }
 

@@ -55,16 +55,23 @@ public class RoomServiceImpl implements RoomService{
 	}
 
 	@Override
-	public boolean checkOut(int oid, int is_vip) {
+	public boolean checkOut(int oid) {
 		Order o = orderDAO.getById(oid);
-		o.setIs_vip(is_vip);
-		if (is_vip == 1) {
+		Hotel hotel = o.getHotel();
+		if (o.getIs_vip() == 1) {
 			int money = o.getUser().getMoney() - o.getVip_price();
-			o.getUser().setMoney(money);
+			if (money > 0) {
+				o.getUser().setMoney(money);
+				hotel.setMoney(hotel.getMoney()+o.getVip_price());
+				hotelDAO.saveOrUpdate(hotel);
+				userDAO.saveOrUpdate(o.getUser());
+			}else{
+				return false;
+			}
 		}
-		if (o.getUser().getRole() == UserRole.TEMP.getValue()) {
-			
-		}
+//		if (o.getUser().getRole() == UserRole.TEMP.getValue()) {
+//			userDAO.remove(o.getUser());
+//		}
 		o.setState(OrderState.OUT.getValue());
 		return orderDAO.update(o);
 	}
@@ -123,17 +130,13 @@ public class RoomServiceImpl implements RoomService{
 				for(Order order : orders){
 					boolean isUseless = false;
 					if (order.getOut_date().compareTo(inDate) <= 0) {
-//						orders.remove(order);
 						isUseless = true;
 					}else if (order.getIn_date().compareTo(outDate) >= 0) {
-//						orders.remove(order);
 						isUseless = true;
 					}
 					if (order.getState() == OrderState.CANCEL.getValue()) {
-//						orders.remove(order);
 						isUseless = true;
 					}else if (order.getState() == OrderState.OUT.getValue()) {
-//						orders.remove(order);
 						isUseless = true;
 					}
 					if (isUseless == false) {

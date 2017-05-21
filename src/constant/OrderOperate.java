@@ -12,3 +12,4 @@ public enum OrderOperate {
 		return value;
 	}
 }
+

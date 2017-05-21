@@ -53,18 +53,6 @@
 		                <li class="active"><a href="chooseHotel">酒店信息</a></li>
 		                <li><a href="personalHome">用户信息</a></li>
 		                <li><a href="logout">退出登录</a></li>
-		                <li class="dropdown">
-		                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-		                    <ul class="dropdown-menu">
-		                        <li><a href="#">Action</a></li>
-		                        <li><a href="#">Another action</a></li>
-		                        <li><a href="#">Something else here</a></li>
-		                        <li role="separator" class="divider"></li>
-		                        <li class="dropdown-header">Nav header</li>
-		                        <li><a href="#">Separated link</a></li>
-		                        <li><a href="#">One more separated link</a></li>
-		                    </ul>
-		                </li>
 		            </ul>
 		        </div><!--/.nav-collapse -->
 		    </div>
@@ -129,7 +117,6 @@
           			<option value="<%=city.getValue() %>"><%=city.getValue() %></option>
           		<%}
           	}%>
-          
           </select>
         </div>
         <div class="form-group sx-search">
@@ -214,7 +201,7 @@
       		out.println("<p>"+hotel.getDescription()+"</p>");
       		out.println("<p class=\"sx-small-grey\">“"+hotel.getGoodComment()+"”</p>");
       		out.println("</div>");
-      		out.println("<div class=\"col-md-3 sx-vertical-line sx-content-center\">");
+      		out.println("<div class=\"col-md-3 sx-vertical-line-fix sx-content-center\">");
       		out.println("<p><span class=\"sx-big-blue\">"+String.format("%.1f", hotel.getAvgStar())+"</span>/5分</p>");
       		out.println("<p>"+hotel.getCommentNum()+"次评价</p>");
       		out.println("<p class=\"sx-small-green\">"+hotel.getGoodCommentNum()+"条好评</p>");

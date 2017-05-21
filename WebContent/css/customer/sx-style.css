@@ -9,6 +9,19 @@
     height: 140px;
     /*height: auto;*/
 }
+.sx-right{
+    float: right;
+}
+
+.sx-head{
+    border-left-color: #2b669a;
+    border-left-style: solid;
+    border-left-width: thick;
+    margin: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
 
 .sx-block{
     border-right:solid thin #eeeeee;
@@ -145,9 +158,9 @@ html{
     font-family: apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
 
-.label{
-    margin-right: 10px;
-}
+/*.label{*/
+    /*margin-right: 10px;*/
+/*}*/
 
 .sx-content-center{
     text-align: center;
@@ -166,7 +179,7 @@ html{
 }
 
 .sx-small-red{
-    color:red;
+    color:#d43f3a;
     font-size: 1em;
     font-weight: bold;
 }
@@ -236,6 +249,11 @@ p{
 }
 
 
+
+.sx-left-float{
+    float: left;
+}
+
 .sx-position-fixed{
     top:0;
     position: fixed;
@@ -243,6 +261,11 @@ p{
 
 .sx-background{
     background-color: #fafafa !important;
+}
+
+
+.sx-front{
+    background-color: #ffffff;
 }
 
 .sx-margin-clear{
@@ -311,7 +334,9 @@ input[name="btnInForm"]{
     width: 100%;!important;
 }
 
-
+.sx-remove-padding-right{
+    padding-right: 0 !important;
+}
 
 
 

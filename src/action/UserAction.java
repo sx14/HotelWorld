@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -51,7 +53,18 @@ public class UserAction extends ActionSupport{
 		}	
 	}
 	
-
+	
+	public String cancelVIP(){
+		Map session = ActionContext.getContext().getSession();
+		User user = (User) session.get("user");
+		user.setVisa(null);
+		boolean result = userService.saveOrUpdate(user);
+		if (result == true) {
+			return SUCCESS;
+		}else {
+			return ERROR;
+		}
+	}
 	
 	public String logout(){
 		Map session = ActionContext.getContext().getSession();
@@ -70,6 +83,8 @@ public class UserAction extends ActionSupport{
 		if (money >= chargeMoney) {
 			user.getVisa().setMoney(money - chargeMoney);
 			user.setMoney(user.getMoney() + chargeMoney);
+			Date today = Calendar.getInstance().getTime();
+			user.setLast_charge_date(today);
 			result = userService.saveOrUpdate(user);
 		}else {
 			return "not_enough";
@@ -118,6 +133,10 @@ public class UserAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
+	
+	public String register(){
+		return SUCCESS;
+	}
 
 	
 	public String registerQuickly(){
@@ -158,10 +177,14 @@ public class UserAction extends ActionSupport{
 			}else if (userDetail.getRole() == UserRole.OWNER.getValue()) {
 				Hotel hotel = hotelService.getHotelByUid(userDetail.getUid());
 				if(hotel != null && hotel.getState() == ApplyState.OPEN.getValue()){					
-					ajax("manageRoom");
+//					ajax("manageRoom");
+					ajax("searchRoom");
 				}else{
+
 					ajax("chooseHotel");
 				}
+			}else if (userDetail.getRole() == UserRole.SUPER.getValue()) {
+				ajax("hciManageRoom");
 			}else{
 				ajax("chooseHotel");
 			}
@@ -227,18 +250,13 @@ public class UserAction extends ActionSupport{
 		this.password = password;
 	}
 
-
-
 	public InputStream getAjax() {
 		return ajax;
 	}
 
-
-
 	public void setAjax(InputStream ajax) {
 		this.ajax = ajax;
 	}
-
 
 	public HotelService getHotelService() {
 		return hotelService;

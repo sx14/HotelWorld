@@ -1,10 +1,22 @@
 package service.impl;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.CriteriaBuilder.In;
+
 import org.apache.struts2.ServletActionContext;
 
 import constant.ApplyState;
+import constant.OrderState;
 import constant.UserRole;
 import dao.HotelDAO;
 import dao.HotelDraftDAO;
@@ -34,7 +46,7 @@ public class HotelServiceImpl implements HotelService{
 			for(int j = 0 ; j < hotels.size() - 1 - i; j ++){
 				Hotel front = hotels.get(j);
 				Hotel back = hotels.get(j+1);
-				if (front.getAvgStar() > back.getAvgStar()) {
+				if (front.getAvgStar() < back.getAvgStar()) {
 					hotels.set(j, back);
 					hotels.set(j+1, front);
 				}
@@ -147,6 +159,56 @@ public class HotelServiceImpl implements HotelService{
 		return (result1 && result2);
 	}
 
+
+
+	@Override
+	public String getStatisticData(Hotel hotel) {
+		Calendar calendar = Calendar.getInstance();
+		Calendar before = Calendar.getInstance();
+		before.add(Calendar.DAY_OF_MONTH, -30);
+		Date today = calendar.getTime();
+		Date monthBefore = before.getTime();
+		Map<String, Integer> counter = new TreeMap<>();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		while (before.before(calendar)) {
+			counter.put(format.format(before.getTime()),0);
+			before.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		for(model.Order order : hotel.getOrders()){
+			Date inDate = order.getIn_date();
+			if (inDate.compareTo(monthBefore) >= 0 && inDate.before(today) && order.getState() == OrderState.OUT.getValue()) {
+				Integer count = counter.get(format.format(inDate));
+				if (count == null) {
+					count = 0;
+				}
+				if (order.getIs_vip() == 1) {
+					count += order.getVip_price();
+				}else{
+					count += order.getPrice();
+				}
+				counter.put(format.format(inDate), count);
+			}
+		}
+		StringBuilder dateBuilder = new StringBuilder();
+		Set<Entry<String , Integer>> entries = counter.entrySet();
+		dateBuilder.append("\"date\":[");
+		StringBuilder moneyBuilder = new StringBuilder();
+		moneyBuilder.append("\"money\":[");
+		for(Entry<String, Integer> entry : entries){
+			dateBuilder.append('\"').append(entry.getKey()).append('\"').append(",");
+			moneyBuilder.append(entry.getValue()).append(",");
+		}
+		dateBuilder.replace(dateBuilder.length() - 1, dateBuilder.length(), "]");
+		moneyBuilder.replace(moneyBuilder.length() - 1, moneyBuilder.length(), "]");
+		StringBuilder data = new StringBuilder();
+		data.append("{");
+		data.append(dateBuilder.toString());
+		data.append(",");
+		data.append(moneyBuilder.toString());
+		data.append("}");
+		return data.toString();
+	}
+	
 	public RoomDAO getRoomDAO() {
 		return roomDAO;
 	}
@@ -154,5 +216,9 @@ public class HotelServiceImpl implements HotelService{
 	public void setRoomDAO(RoomDAO roomDAO) {
 		this.roomDAO = roomDAO;
 	}
-	
+
+	@Override
+	public Hotel getHotelByHid(int hid) {
+		return hotelDAO.getByHid(hid).get(0);
+	}
 }

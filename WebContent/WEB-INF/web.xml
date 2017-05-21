@@ -3,12 +3,11 @@
   <display-name>HotelWorld</display-name>
 
 	<filter>
-        <filter-name>static</filter-name>
-        <filter-class>filter.StaticPageFilter</filter-class>
+        <filter-name>auth</filter-name>
+        <filter-class>filter.AuthenticationFilter</filter-class>
     </filter>
-
     <filter-mapping>
-        <filter-name>static</filter-name>
+        <filter-name>auth</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

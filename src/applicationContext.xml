@@ -34,8 +34,8 @@
 					org.hibernate.dialect.MySQL5Dialect
 				</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.format_sql">true</prop>
+                <!-- <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop> -->
 			</props>
 		</property>
 		<property name="packagesToScan" value="model" />
@@ -117,6 +117,11 @@
     
     <bean id="roomDAOImpl" class="dao.impl.RoomDAOImpl" scope="singleton">
     	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- ============================ hci ========================== -->
+
+    <bean id="hciRoomAction" class="hci.action.HCIRoomAction" scope="prototype">
     </bean>
     
 	<bean id="transactionManager"

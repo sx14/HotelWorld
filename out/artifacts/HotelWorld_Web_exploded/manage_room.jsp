@@ -2,7 +2,6 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="model.Customer"%>
-<%@page import="model.User"%>
 <%@page import="model.RoomType"%>
 <%@page import="model.Hotel" %>
 <%@page import="model.Room" %>
@@ -13,15 +12,15 @@
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
     Hotel hotel = (Hotel)session.getAttribute("hotel");
-    Date inDate = (Date)request.getAttribute("inDate");
-    Date outDate = (Date)request.getAttribute("outDate");
+    Date inDate = (Date)session.getAttribute("inDate");
+    Date outDate = (Date)session.getAttribute("outDate");
     
 %>
 
 
 <!DOCTYPE html>
 <html lang="en">
-<base href="<%=basePath%>"></base>
+<base href="<%=basePath%>"/>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,7 +40,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
 </head>
@@ -63,7 +61,7 @@
             <div id="navbar1" class="collapse navbar-collapse">
               <ul class="nav navbar-nav" style="float:right">
                 <li class="active"><a>房间预订</a></li>
-                <li><a href="personalHome">酒店主页</a></li>
+                <li><a href="hotelHome">酒店管理</a></li>
                 <li><a href="logout">退出登录</a></li>
               </ul>
             </div><!--/.nav-collapse -->
@@ -161,7 +159,7 @@
 				out.println("<div class=\"form-group\">");
 				out.println("<label class=\"control-label col-md-2\">预订人</label>");
 				out.println("<div class=\"col-md-10\">");
-				out.println("<input name=\"order.user.name\" type=\"text\" class=\"form-control\" value=\""+order.getUser().getName()+"\" readonly>");
+				out.println("<input name=\"order.user.name\" type=\"text\" class=\"form-control\" value=\""+order.getUser().getUsername()+"\" readonly>");
 				out.println("</div>");
 				out.println("</div>");
 				out.println("<div class=\"form-group\">");

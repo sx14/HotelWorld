@@ -6,9 +6,6 @@
 <struts>
 	<constant name="struts.objectFactory" value="spring" />
 	<package name="default" extends="struts-default">
-		<action name="test" class="action.TestAction" method="execute">
-			<result name="success">test.jsp</result>
-		</action>
 		<action name="registerQuickly" class="action.UserAction" method="registerQuickly">
 			<result name="success" type="stream">
 				<param name="contentType">text/html</param>
@@ -21,6 +18,33 @@
 				<param name="contentType">text/html</param>
 				<param name="inputName">ajax</param>
 			</result>
+		</action>
+		
+		<action name="chargeVIP" class="action.UserAction" method="chargeVIP">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="register" class="action.UserAction" method="register">
+			<result name="success">register.jsp</result>
+		</action>
+		
+		<action name="logout" class="action.UserAction" method="logout">
+			<result name="success">/</result>
+		</action>
+
+		<action name="checkExists" class="action.UserAction" method="checkExists">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="cancelVIP" class="action.UserAction" method="cancelVIP">
+			<result name="success" type="redirect">personalHome</result>
+		</action>
+		
+		<action name="registerVIP" class="action.UserAction" method="registerVIP">
+			<result name="success" type="redirect">personalHome</result>
 		</action>
 		
 		<action name="chooseHotel" class="action.HotelAction" method="chooseHotel">
@@ -39,6 +63,14 @@
 			<result name="success">manage_hotel_modify.jsp</result>
 		</action>
 		
+		<action name="manageHotelStatistic" class="action.HotelAction" method="manageHotelStatistic">
+			<result name="success">manage_hotel_statistic.jsp</result>
+		</action>
+		
+		<action name="showHotelStatistic" class="action.HotelAction" method="showHotelStatistic">
+			<result name="success">hotel_home.jsp</result>
+		</action>
+		
 		<action name="hotelStatitic" class="action.HotelAction" method="hotelStatistic">
 			<result name="success">manage_hotel_statistic.jsp</result>
 		</action>
@@ -55,9 +87,11 @@
 			<result name="success">personal_home.jsp</result>
 		</action>
 		
-		<action name="registerVIP" class="action.UserAction" method="registerVIP">
-			<result name="success" type="redirect">personalHome</result>
+		<action name="hotelHome" class="action.HotelAction" method="hotelHome">
+			<result name="success">hotel_home.jsp</result>
 		</action>
+		
+
 		
 		<action name="modifyHotel" class="action.HotelAction" method="modifyHotel">
 			<result name="success">modify_hotel.jsp</result>
@@ -67,9 +101,7 @@
 			<result name="success" type="redirect">personalHome</result>
 		</action>
 		
-		<action name="chargeVIP" class="action.UserAction" method="chargeVIP">
-			<result name="success" type="redirect">personalHome</result>
-		</action>
+
 		
 		<action name="manageRoom" class="action.RoomAction" method="manageRoom">
 			<result name="success">manage_room.jsp</result>
@@ -79,9 +111,7 @@
 			<result name="success">manage_reserve_room.jsp</result>
 		</action>
 		
-		<action name="handleOrder" class="action.OrderAction" method="handleOrder">
-			<result name="success" type="redirect">manageRoom</result>
-		</action>
+
 		
 		<action name="chooseRoom" class="action.RoomAction" method="chooseRoom">
 			<result name="success">choose_room.jsp</result>
@@ -98,6 +128,10 @@
 			</result>
 		</action>
 		
+		<action name="handleOrder" class="action.OrderAction" method="handleOrder">
+			<result name="success" type="redirect">manageRoom</result>
+		</action>
+		
 		<action name="cancelOrder" class="action.OrderAction" method="cancelOrder">
 			<result name="success" type="redirect">personalHome</result>
 		</action>
@@ -109,13 +143,46 @@
 		<action name="saveComment" class="action.OrderAction" method="saveComment">
 			<result name="success" type="redirect">personalHome</result>
 		</action>
-		
-		<action name="logout" class="action.UserAction" method="logout">
-			<result name="success">/</result>
+
+		<!--============================== HCI ================================-->
+		<action name="searchRoom" class="hci.action.HCIRoomAction" method="searchRoom">
+			<result name="success">hci_room_in.jsp</result>
 		</action>
 		
-		<!-- =============ajax============= -->
-		<action name="checkExists" class="action.UserAction" method="checkExists">
+		<action name="removeSome" class="hci.action.HCIRoomAction" method="removeSome">
+			<result name="success">hci_room_out.jsp</result>
+		</action>
+		
+		<action name="showCheckOut" class="hci.action.HCIRoomAction" method="searchRoom">
+			<result name="success">hci_room_out.jsp</result>
+		</action>
+		
+		<action name="handleReserve" class="hci.action.HCIRoomAction" method="handleReserve">
+			<result name="success">hci_room_reserve.jsp</result>
+		</action>
+		
+		<action name="checkIn" class="hci.action.HCIOrderAction" method="checkIn">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="changeRoom" class="hci.action.HCIOrderAction" method="changeRoom">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+
+		<action name="fixRoom" class="hci.action.HCIRoomAction" method="fixRoom">
+			<result name="success" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">ajax</param>
+			</result>
+		</action>
+		
+		<action name="fixComplete" class="hci.action.HCIRoomAction" method="fixComplete">
 			<result name="success" type="stream">
 				<param name="contentType">text/html</param>
 				<param name="inputName">ajax</param>

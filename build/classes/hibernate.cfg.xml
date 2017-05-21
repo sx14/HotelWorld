@@ -8,8 +8,6 @@
         <!-- 配置mySql连接参数 -->
          <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
          <property name="connection.pool_size">5</property>
-         <property name="show_sql">true</property>
-         <property name="format_sql">true</property>
          <property name="hbm2ddl.auto">update</property>
          
          <property name="connection.driver_class">com.mysql.jdbc.Driver</property>

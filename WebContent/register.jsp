@@ -45,7 +45,7 @@
                     <h3 class="masthead-brand">Hotel World</h3>
                     <nav>
                         <ul class="nav masthead-nav">
-                            <li><a href="index.jsp">登录</a></li>
+                            <li><a href="/HotelWorld/">登录</a></li>
                             <li class="active"><a href="#">快速注册</a></li>
                         </ul>
                     </nav>

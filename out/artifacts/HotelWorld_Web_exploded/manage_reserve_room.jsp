@@ -15,9 +15,8 @@
     //Hotel hotel = (Hotel)session.getAttribute("hotel");
     Hotel hotel = (Hotel) request.getAttribute("hotel");
     String phone = (String) request.getAttribute("phone");
-    Date inDate = (Date)request.getAttribute("inDate");
-    Date outDate = (Date)request.getAttribute("outDate");
-
+    Date inDate = (Date)session.getAttribute("inDate");
+    Date outDate = (Date)session.getAttribute("outDate");
 %>
 
 
@@ -43,7 +42,6 @@
     <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/theme.css" rel="stylesheet">
     <link href="css/customer/sx-style.css" rel="stylesheet">
 
 </head>
@@ -81,7 +79,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body row">
-            <form class="form-horizontal col-md-7 sx-vertical-line">
+            <form class="form-horizontal col-md-7 sx-vertical-line" method="get" action="manageRoom">
                 <div class="form-group">
                     <label class="control-label col-md-2">日期</label>
                     <%
@@ -97,11 +95,11 @@
                 </div>
             </form>
 
-            <form class="form-horizontal col-md-5">
+            <form class="form-horizontal col-md-5" method="get" action="searchRoom">
                 <div class="form-group">
                     <label class="control-label col-md-3">预订手机号</label>
                     <div class="col-md-6">
-                        <input type="number" class="form-control" value="<%=phone%>">
+                        <input type="number" name="phone" class="form-control" value="<%=phone%>">
                     </div>
                     <input type="submit" class="btn btn-primary" value="搜索预订房间">
                 </div>

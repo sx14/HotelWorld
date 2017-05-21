@@ -13,13 +13,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="../css/bootstrap-theme.min.css" rel="stylesheet">
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../css/theme.css" rel="stylesheet">
+    <link href="../css/customer/sx-style.css" rel="stylesheet">
     <link href="../css/customer/sx-show-hotel-occupy.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -70,46 +64,69 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron sx-jumbotron">
     </div>
+    <ul class="nav nav-tabs nav-justified">
+        <li role="presentation"><a>新店注册</a></li>
+        <li role="presentation"><a>店铺修改</a></li>
+        <li role="presentation" class="active"><a>经营统计</a></li>
+    </ul>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4><strong>经营统计</strong></h4>
-        </div>
+    <div class="panel sx-panel">
         <div class="panel-body">
-            <p>入住情况</p>
-            <hr>
-            <div>
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label class="control-label">请选择日期</label>
-                        <input type="date" class="form-control">
-                        <input type="submit" class="btn btn-default" value="查询">
+            <form class="form-inline container">
+                    <div class="form-group sx-search">
+                        <label>城市</label>
+                        <select class="form-control">
+                            <option>南京</option>
+                            <option>北京</option>
+                            <option>上海</option>
+                            <option>广州</option>
+                            <option>深圳</option>
+                        </select>
                     </div>
+                    <div class="form-group sx-search">
+                        <label>星级</label>
+                        <select class="form-control">
+                            <option>不限</option>
+                            <option>A级（500￥起）</option>
+                            <option>B级（300￥起）</option>
+                            <option>C级（100￥起）</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">搜索店铺</button>
                 </form>
-                <div class="col-md-4 sx-vertical-line">
-                    <p>房型1</p>
-                    <p>预定：20间</p>
-                    <p>占用：50%</p>
-                    <p>剩余：100间</p>
-                </div>
-                <div class="col-md-4 sx-vertical-line">
-                    <p>房型1</p>
-                    <p>预定：20间</p>
-                    <p>占用：50%</p>
-                    <p>剩余：100间</p>
-                </div>
-                <div class="col-md-4">
-                    <p>房型1</p>
-                    <p>预定：20间</p>
-                    <p>占用：50%</p>
-                    <p>剩余：100间</p>
-                </div>
-            </div>
             <hr>
-            <div>
-                财务情况
-            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>店名</th>
+                    <th>法人</th>
+                    <th>地区</th>
+                    <th>当月营业额</th>
+                    <th>查看详细</th>
 
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>南京啦啦啦店<span class="label label-success">A级</span></td>
+                    <td>阿旭</td>
+                    <td>南京</td>
+                    <td>￥1222333</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">查看详情</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>南京啦啦啦店<span class="label label-success">A级</span></td>
+                    <td>阿旭</td>
+                    <td>南京</td>
+                    <td>￥1222333</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">查看详情</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div> <!-- /container -->

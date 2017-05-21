@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -40,12 +41,34 @@ public class User {
 	
 	@Transient
 	public boolean isVIP(){
-		if (visa != null && money>=Config.VIP_MONEY_LEAST) {
-			return true;
+//		if (visa != null && money>=Config.VIP_MONEY_LEAST) {
+		if (visa != null && last_charge_date != null) {
+			Date today = Calendar.getInstance().getTime();
+			long interval = today.getTime() - last_charge_date.getTime();
+			interval = interval - (1000L*60*60*24*365);
+			if (interval <= 0) {
+				return true;
+			}else {
+				return false;
+			}
 		}else {
 			return false;
 		}
 	}
+	
+	@Transient
+	public Date getVIPFailDate(){
+		if (isVIP()) {
+			long d = last_charge_date.getTime();
+			long oneYear = 1000L*60*60*24*365;
+			d = d + oneYear;
+			Date date = new Date(d);
+			return date;
+		}else {
+			return null;
+		}
+	}
+	
 	
 	@Transient
 	public int getCommentNum(){

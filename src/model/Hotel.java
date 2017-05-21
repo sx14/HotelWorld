@@ -1,6 +1,7 @@
 package model;
 import java.io.File;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import constant.ApplyState;
@@ -43,6 +45,7 @@ public class Hotel implements Serializable{
 	private String email;
 	private int state;
 	private String position;
+	private int money;
 	
 	private File imgS;
 	private String imgSFileName;
@@ -161,12 +164,20 @@ public class Hotel implements Serializable{
 	@Transient
 	public int getConsumeSum(){
 		int sum = 0;
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		calendar.add(Calendar.DAY_OF_MONTH, 0-day);
+		Date monthStart = calendar.getTime();
 		for(Order order : orders){
-			if (order.getState()== OrderState.OUT.getValue()) {
-				if (order.getIs_vip() == 1) {
-					sum += order.getVip_price();
-				}else{
-					sum += order.getPrice();
+			if (order.getIn_date().before(monthStart)) {
+				continue;
+			}else{
+				if (order.getState()== OrderState.OUT.getValue()) {
+					if (order.getIs_vip() == 1) {
+						sum += order.getVip_price();
+					}else{
+						sum += order.getPrice();
+					}
 				}
 			}
 		}
@@ -215,6 +226,11 @@ public class Hotel implements Serializable{
 			}
 		}
 		return sum;
+	}
+	
+	@Transient
+	public String getID(){
+		return String.format("%07d", hid);
 	}
 	
 	@Transient
@@ -291,11 +307,20 @@ public class Hotel implements Serializable{
 	public double getAvgStar(){
 		if (orders != null && orders.size() != 0) {
 			double sum = 0;
+			int count = 0;
 			for(Order order : orders){
-				sum += order.getStar();
+				if (order.getComment_content() != null) {
+					sum += order.getStar();
+					count ++;
+				}
 			}
-			double avgStar = sum/orders.size();
-			return (avgStar);
+			if (count != 0) {
+				double avgStar = sum/count;
+				return (avgStar);
+			}else {
+				return 0;
+			}
+			
 		}else {
 			return 0;
 		}
@@ -516,7 +541,12 @@ public class Hotel implements Serializable{
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	
-	
 
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
 }

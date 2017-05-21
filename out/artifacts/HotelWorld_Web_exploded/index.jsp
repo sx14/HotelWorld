@@ -49,7 +49,7 @@
               <nav>
                 <ul class="nav masthead-nav">
                   <li class="active"><a href="#">登录</a></li>
-                  <li><a href="register.jsp">快速注册</a></li>
+                  <li><a href="register">快速注册</a></li>
                 </ul>
               </nav>
             </div>
